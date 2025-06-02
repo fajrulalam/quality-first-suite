@@ -293,7 +293,7 @@ export default function Home() {
               reports to get started.
             </p>
             <p className="mt-2 text-sm text-gray-400">
-              Originally by Accom SQA: M Fajrul Alam U. N, Sunny Kumar, Amit
+              Developed by Accom SQA: M Fajrul Alam U N, Ketan Singh, Sunny Kumar, Amit
               Kumar Dwivedi
             </p>
           </div>
@@ -676,11 +676,7 @@ export default function Home() {
       <footer className="bg-white/50 border-t border-gray-200/80 mt-auto">
         <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-sm text-[var(--text-secondary)]">
-            &copy; {new Date().getFullYear()} Test Analysis Center. Enhanced by
-            Your AI Pair Programmer.
-          </p>
-          <p className="text-xs text-gray-400 mt-1">
-            Inspired by Tiket.com's design palette.
+            &copy; {new Date().getFullYear()} Developed by QA Accommodation Team
           </p>
         </div>
       </footer>
