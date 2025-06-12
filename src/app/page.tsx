@@ -45,6 +45,7 @@ export default function Home() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_combinedData, setCombinedData] = useState<TestData[]>([]);
   const [testCaseOrder, setTestCaseOrder] = useState<string>("");
+  const [matchOrderExactly, setMatchOrderExactly] = useState<boolean>(false);
 
   // Worker reference
   const workerRef = useRef<Worker | null>(null);
@@ -113,6 +114,7 @@ export default function Home() {
           setShowPreview,
           setDragActive,
           testCaseOrder,
+          matchOrderExactly,
         });
       }
     }
@@ -162,6 +164,7 @@ export default function Home() {
       setSecondRunData([]);
       setCombinedData([]);
       setTestCaseOrder("");
+      setMatchOrderExactly(false);
     }
   };
 
@@ -364,9 +367,22 @@ export default function Home() {
                     value={testCaseOrder}
                     onChange={(e) => setTestCaseOrder(e.target.value)}
                   />
+                  <div className="mt-4 flex items-center">
+                    <input
+                      id="match-order-exactly"
+                      type="checkbox"
+                      checked={matchOrderExactly}
+                      onChange={(e) => setMatchOrderExactly(e.target.checked)}
+                      className="h-4 w-4 text-[var(--tiket-blue)] focus:ring-[var(--tiket-blue)] border-gray-300 rounded"
+                    />
+                    <label htmlFor="match-order-exactly" className="ml-2 block text-sm text-[var(--text-primary)]">
+                      Match test names exactly (preserves order and duplicates)
+                    </label>
+                  </div>
                   <p className="mt-2 text-sm text-[var(--text-secondary)]">
-                    Define the order for test cases in the regression report.
-                    Patterns are matched sequentially.
+                    {matchOrderExactly
+                      ? "Tests will be ordered exactly as listed above. Tests not in the list will be appended alphabetically."
+                      : "Define the order for test cases in the regression report. Patterns are matched sequentially."}
                   </p>
                 </section>
               )}

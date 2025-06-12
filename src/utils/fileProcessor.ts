@@ -144,6 +144,7 @@ export const processSecondRunFile = (
     setShowPreview: (showPreview: boolean) => void;
     setDragActive: (dragActive: boolean) => void;
     testCaseOrder?: string;
+    matchOrderExactly?: boolean;
   }
 ) => {
   const { 
@@ -154,6 +155,7 @@ export const processSecondRunFile = (
   
   // Get the testCaseOrder from the callbacks if it exists
   const testCaseOrder = callbacks.testCaseOrder || "";
+  const matchOrderExactly = callbacks.matchOrderExactly ?? false;
   
   if (!file || !file.name.toLowerCase().endsWith(".html")) {
     alert("Please upload an HTML file");
@@ -185,7 +187,7 @@ export const processSecondRunFile = (
       const combined = combineRegressionData(firstRunData, parsedData);
       
       // Order the combined results based on the provided order text if it exists
-      const orderedData = testCaseOrder ? orderTestCases(combined, testCaseOrder) : combined;
+      const orderedData = testCaseOrder ? orderTestCases(combined, testCaseOrder, matchOrderExactly) : combined;
       setCombinedData(orderedData);
 
       // Convert combined data to CSV
