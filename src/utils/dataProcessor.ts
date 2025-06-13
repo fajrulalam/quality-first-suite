@@ -6,29 +6,51 @@ export const combineRegressionData = (
   secondRunData: TestData[]
 ): TestData[] => {
   const combinedResults: TestData[] = [];
+  
+  // Helper to get the base test name (part before underscore)
+  const getBaseTestName = (testName: string) => testName.split("_")[0];
+  
+  // Create a map using base test names as keys
   const testNameMap = new Map<
-    string,
-    { firstRun: TestData | null; secondRun: TestData | null }
+    string, // base test name (without timestamp)
+    { 
+      firstRun: TestData | null; 
+      secondRun: TestData | null;
+      fullName: string; // preserve the original test name for the final result
+    }
   >();
 
   // Process first run data
   firstRunData.forEach((test) => {
-    testNameMap.set(test.testName, { firstRun: test, secondRun: null });
+    const baseTestName = getBaseTestName(test.testName);
+    testNameMap.set(baseTestName, { 
+      firstRun: test, 
+      secondRun: null,
+      fullName: test.testName
+    });
   });
 
   // Process second run data
   secondRunData.forEach((test) => {
-    const existingEntry = testNameMap.get(test.testName);
+    const baseTestName = getBaseTestName(test.testName);
+    const existingEntry = testNameMap.get(baseTestName);
+    
     if (existingEntry) {
       existingEntry.secondRun = test;
+      // Prefer the second run's full name if available
+      existingEntry.fullName = test.testName;
     } else {
-      testNameMap.set(test.testName, { firstRun: null, secondRun: test });
+      testNameMap.set(baseTestName, { 
+        firstRun: null, 
+        secondRun: test,
+        fullName: test.testName
+      });
     }
   });
 
   // Combine the data and determine passedIn status
-  testNameMap.forEach((entry, testName) => {
-    const { firstRun, secondRun } = entry;
+  testNameMap.forEach((entry, baseTestName) => {
+    const { firstRun, secondRun, fullName } = entry;
 
     let passedIn = "Manual";
     let status = "FAIL";
@@ -56,9 +78,9 @@ export const combineRegressionData = (
       rootCause = secondRun.failureReason;
     }
 
-    // Add to combined results
+    // Add to combined results - use the saved fullName instead of baseTestName
     combinedResults.push({
-      testName,
+      testName: fullName, // Use the preserved full test name
       status,
       sessionId: (secondRun || firstRun)?.sessionId || "",
       failureStep: (secondRun || firstRun)?.failureStep || "",

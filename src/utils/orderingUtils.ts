@@ -9,86 +9,99 @@ import { TestData } from "./types";
  * @returns Ordered array of test data
  */
 export function orderTestCases(
-  data: TestData[], 
-  orderText: string, 
+  data: TestData[],
+  orderText: string,
   matchOrderExactly: boolean = false
 ): TestData[] {
+  // Helper to get the base name for consistent comparison (e.g., "addProtection" from "addProtection_123")
+  const getBaseTestName = (testName: string) => testName.split("_")[0];
+
   if (!orderText.trim()) {
     if (matchOrderExactly) {
-      // If matchOrderExactly is true and no order text provided, sort alphabetically
-      return [...data].sort((a, b) => a.testName.localeCompare(b.testName));
+      // If exact matching is on but no order text, sort all data alphabetically by base name
+      return [...data].sort((a, b) =>
+        getBaseTestName(a.testName).localeCompare(getBaseTestName(b.testName))
+      );
     }
-    // If matchOrderExactly is false and no order text provided, return data as is (original behavior)
+    // For pattern matching with no order text, return data as is
     return data;
   }
 
-  // Split order text into lines and filter out empty lines
   const orderLines = orderText
     .split("\n")
-    .map(line => line.trim())
-    .filter(line => line.length > 0);
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
 
   if (orderLines.length === 0) {
     if (matchOrderExactly) {
-      // If matchOrderExactly is true and no valid order lines, sort alphabetically
-      return [...data].sort((a, b) => a.testName.localeCompare(b.testName));
+      // If order text is empty after processing, sort all data alphabetically by base name
+      return [...data].sort((a, b) =>
+        getBaseTestName(a.testName).localeCompare(getBaseTestName(b.testName))
+      );
     }
-    // If matchOrderExactly is false and no valid order lines, return original data (original behavior)
     return data;
   }
 
   if (matchOrderExactly) {
-    // Exact ordering mode
+    // New exact ordering logic
     const orderedResult: TestData[] = [];
-    const availableTests: TestData[] = [...data]; // Create a mutable copy to track which tests have been used
+    const availableTests: TestData[] = [...data]; // Create a mutable copy
 
-    // Follow the exact ordering in orderLines
     for (const nameInOrder of orderLines) {
-      // Find the first available test with matching name
       const matchIndex = availableTests.findIndex(
-        test => test.testName === nameInOrder
+        (test) => getBaseTestName(test.testName) === nameInOrder
       );
 
       if (matchIndex !== -1) {
-        // Add the test to the result in order
+        // A matching test was found, add it to the result
         orderedResult.push(availableTests[matchIndex]);
-        // Remove it from available tests to handle duplicates correctly
+        // Remove it from the available pool to handle duplicates correctly
         availableTests.splice(matchIndex, 1);
+      } else {
+        // No matching test was found, create a placeholder row
+        orderedResult.push({
+          testName: nameInOrder,
+          status: "",
+          sessionId: "",
+          failureStep: "",
+          exceptionMessage: "",
+          failureReason: "",
+          passedIn: "",
+          issueType: "",
+          rootCause: "",
+        });
       }
-      // Skip lines from orderText that don't match any available tests
     }
-
-    // Append any remaining tests that weren't in orderLines, sorted alphabetically
-    availableTests.sort((a, b) => a.testName.localeCompare(b.testName));
-    return [...orderedResult, ...availableTests];
+    // Return only the tests corresponding to orderText, discarding any others
+    return orderedResult;
   } else {
-    // Original pattern-matching mode
+    // Original pattern-matching logic, updated for base name comparison
     const orderPriorities = orderLines;
-
-    // Create a map to track which priority each test belongs to
     const testPriorityMap = new Map<string, number>();
 
-    // Assign priority to each test based on the first matching pattern
-    data.forEach(test => {
-      const priorityIndex = orderPriorities.findIndex(pattern => 
-        test.testName.includes(pattern)
+    data.forEach((test) => {
+      const priorityIndex = orderPriorities.findIndex((pattern) =>
+        getBaseTestName(test.testName).includes(pattern)
       );
-      
-      // If test matches a pattern, assign its priority index, otherwise set to a high number
-      testPriorityMap.set(test.testName, priorityIndex >= 0 ? priorityIndex : orderPriorities.length);
+      testPriorityMap.set(
+        test.testName,
+        priorityIndex >= 0 ? priorityIndex : orderPriorities.length
+      );
     });
 
-    // Sort the data based on priority and then alphabetically for tests with same priority
     return [...data].sort((a, b) => {
-      const priorityA = testPriorityMap.get(a.testName) ?? orderPriorities.length;
-      const priorityB = testPriorityMap.get(b.testName) ?? orderPriorities.length;
+      const priorityA =
+        testPriorityMap.get(a.testName) ?? orderPriorities.length;
+      const priorityB =
+        testPriorityMap.get(b.testName) ?? orderPriorities.length;
 
       if (priorityA !== priorityB) {
         return priorityA - priorityB;
       }
-
-      // If same priority, sort alphabetically
-      return a.testName.localeCompare(b.testName);
+      // For tests with the same priority, sort alphabetically by base name
+      return getBaseTestName(a.testName).localeCompare(
+        getBaseTestName(b.testName)
+      );
     });
   }
 }
