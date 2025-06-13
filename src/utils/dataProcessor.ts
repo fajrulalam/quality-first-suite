@@ -49,7 +49,8 @@ export const combineRegressionData = (
   });
 
   // Combine the data and determine passedIn status
-  testNameMap.forEach((entry, baseTestName) => {
+  // Use Array.from to avoid unused parameter warning
+  Array.from(testNameMap.values()).forEach(entry => {
     const { firstRun, secondRun, fullName } = entry;
 
     let passedIn = "Manual";
