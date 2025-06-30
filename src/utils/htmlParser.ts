@@ -43,12 +43,13 @@ export const parseHtmlToData = (htmlContent: string): TestData[] => {
     let failureReason = "";
 
     if (status === "FAIL") {
-      // Extract failure step (h4 with red color)
-      const failureStepElement = testContainer.querySelector(
-        "h4[style*='color: red']"
+      // Extract failure step (last h4 with blue color)
+      const failureStepElements = testContainer.querySelectorAll(
+        "h4[style*='color: blue']"
       );
-      if (failureStepElement) {
-        failureStep = failureStepElement.textContent?.trim() || "";
+      if (failureStepElements.length > 0) {
+        const lastFailureStepElement = failureStepElements[failureStepElements.length - 1];
+        failureStep = lastFailureStepElement.textContent?.trim() || "";
       }
 
       // Extract exception message from textarea with class code-block

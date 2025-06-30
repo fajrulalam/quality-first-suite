@@ -48,6 +48,27 @@ export const combineRegressionData = (
     }
   });
 
+  // Helper function to categorize issue based on root cause
+  const categorizeIssue = (cause: string): string => {
+    if (!cause) return "";
+    const lowerCause = cause.toLowerCase();
+
+    if (lowerCause.includes("timeout waiting for") || lowerCause.includes("element not found")) {
+      return "Locator";
+    }
+    if (lowerCause.includes("expected is") && lowerCause.includes("but actual is")) {
+      return "Defect";
+    }
+    if (lowerCause.includes("failed to scroll") || lowerCause.includes("failed to get text from")) {
+      return "Script";
+    }
+    if (lowerCause.includes("adb") || lowerCause.includes("server-side error")) {
+      return "Env";
+    }
+    // No clear rule for 'Data' from the examples, so we'll leave it out for now.
+    return ""; // Default if no category matches
+  };
+
   // Combine the data and determine passedIn status
   // Use Array.from to avoid unused parameter warning
   Array.from(testNameMap.values()).forEach(entry => {
@@ -55,10 +76,9 @@ export const combineRegressionData = (
 
     let passedIn = "Manual";
     let status = "FAIL";
-    const issueType = "";
     let rootCause = "";
 
-    // Determine passedIn status
+    // Determine passedIn status and rootCause
     if (firstRun && firstRun.status === "PASS") {
       passedIn = "1st run";
       status = "PASS";
@@ -66,18 +86,14 @@ export const combineRegressionData = (
       passedIn = "2nd run";
       status = "PASS";
     } else if (!firstRun && secondRun && secondRun.status === "FAIL") {
-      passedIn = "Manual";
-      status = "FAIL";
       rootCause = secondRun.failureReason;
     } else if (firstRun && !secondRun) {
-      passedIn = "Manual";
-      status = "FAIL";
       rootCause = firstRun.failureReason;
     } else if (firstRun && secondRun && secondRun.status === "FAIL") {
-      passedIn = "Manual";
-      status = "FAIL";
       rootCause = secondRun.failureReason;
     }
+
+    const issueType = categorizeIssue(rootCause);
 
     // Add to combined results - use the saved fullName instead of baseTestName
     combinedResults.push({
