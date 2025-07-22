@@ -29,6 +29,10 @@ export const parseHtmlToData = (htmlContent: string): TestData[] => {
     const statusClass = statusElement?.className || "";
     const status = statusClass.includes("text-fail") ? "FAIL" : "PASS";
 
+    // Extract Responsible QA from badge-pill
+    const responsibleQAElement = testContainer.querySelector(".badge-pill");
+    const responsibleQA = responsibleQAElement?.textContent?.trim() || "";
+
     // Extract session ID
     let sessionId = "";
     const sessionText = testContainer.textContent || "";
@@ -84,6 +88,7 @@ export const parseHtmlToData = (htmlContent: string): TestData[] => {
       failureStep,
       exceptionMessage,
       failureReason,
+      responsibleQA,
     });
   });
 

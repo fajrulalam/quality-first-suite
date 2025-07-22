@@ -8,4 +8,5 @@ export interface TestData {
   passedIn?: string;
   issueType?: string;
   rootCause?: string;
+  responsibleQA?: string;
 }

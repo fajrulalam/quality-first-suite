@@ -32,6 +32,7 @@ export default function Home() {
   // File and data state
   const [csvData, setCsvData] = useState<string>("");
   const [fileName, setFileName] = useState<string>("");
+  const [copySuccess, setCopySuccess] = useState("");
 
   // Regression analysis specific state
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -148,6 +149,24 @@ export default function Home() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleCopyToClipboard = () => {
+    if (!csvData) {
+      alert("No data available to copy.");
+      return;
+    }
+
+    navigator.clipboard.writeText(csvData).then(
+      () => {
+        setCopySuccess("Copied to clipboard!");
+        setTimeout(() => setCopySuccess(""), 2000);
+      },
+      () => {
+        setCopySuccess("Failed to copy.");
+        setTimeout(() => setCopySuccess(""), 2000);
+      }
+    );
   };
 
   const handleGoBack = () => {
@@ -270,6 +289,12 @@ export default function Home() {
             </div>
             <div className="flex items-center space-x-4">
               <Link
+                href="/test-data"
+                className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-[var(--tiket-blue)] hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 shadow-md hover:shadow-lg"
+              >
+                Create Test Data 🔄
+              </Link>
+              <Link
                 href="/chatbot"
                 className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-[var(--tiket-yellow)] hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition-colors duration-200 shadow-md hover:shadow-lg"
               >
@@ -296,8 +321,8 @@ export default function Home() {
               reports to get started.
             </p>
             <p className="mt-2 text-sm text-gray-400">
-              Developed by Accom SQA: M Fajrul Alam U N, Ketan Singh, Sunny Kumar, Amit
-              Kumar Dwivedi
+              Developed by Accom SQA: M Fajrul Alam U N, Sunny Kumar, Amit Kumar
+              Dwivedi
             </p>
           </div>
 
@@ -375,7 +400,10 @@ export default function Home() {
                       onChange={(e) => setMatchOrderExactly(e.target.checked)}
                       className="h-4 w-4 text-[var(--tiket-blue)] focus:ring-[var(--tiket-blue)] border-gray-300 rounded"
                     />
-                    <label htmlFor="match-order-exactly" className="ml-2 block text-sm text-[var(--text-primary)]">
+                    <label
+                      htmlFor="match-order-exactly"
+                      className="ml-2 block text-sm text-[var(--text-primary)]"
+                    >
                       Match test names exactly (preserves order and duplicates)
                     </label>
                   </div>
@@ -510,7 +538,7 @@ export default function Home() {
                   Analysis Preview:{" "}
                   <span className="text-[var(--tiket-blue)]">{fileName}</span>
                 </h2>
-                <div className="flex space-x-3">
+                <div className="flex items-center">
                   <button
                     onClick={handleGoBack}
                     className="px-6 py-3 rounded-lg text-sm font-semibold border-2 border-[var(--tiket-blue)] text-[var(--tiket-blue)] bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-[var(--tiket-blue)] focus:ring-offset-2 transition-all duration-200 shadow-sm hover:shadow-md flex items-center"
@@ -531,7 +559,7 @@ export default function Home() {
                   </button>
                   <button
                     onClick={handleDownloadCsv}
-                    className="px-6 py-3 rounded-lg text-sm font-semibold text-white bg-[var(--tiket-blue)] hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-[var(--tiket-blue)] focus:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg flex items-center"
+                    className="ml-4 px-6 py-3 rounded-lg text-sm font-semibold text-white bg-[var(--tiket-blue)] hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-[var(--tiket-blue)] focus:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg flex items-center"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -547,6 +575,26 @@ export default function Home() {
                     </svg>
                     Download CSV
                   </button>
+                  <button
+                    onClick={handleCopyToClipboard}
+                    className="ml-4 px-6 py-3 rounded-lg text-sm font-semibold text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg flex items-center"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 mr-2"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                      <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+                    </svg>
+                    Copy to Clipboard
+                  </button>
+                  {copySuccess && (
+                    <span className="ml-4 text-green-600 font-semibold">
+                      {copySuccess}
+                    </span>
+                  )}
                 </div>
               </div>
               <div className="overflow-auto max-h-[60vh] rounded-lg border border-gray-200 shadow-inner custom-scrollbar bg-white/70">

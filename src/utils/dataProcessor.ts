@@ -146,7 +146,7 @@ export const convertRegressionDataToCsv = (data: TestData[]): string => {
 export const convertDataToCsv = (data: TestData[]): string => {
   // CSV header
   let csvContent =
-    "testName,status,sessionId,failureStep,exceptionMessage,failureReason\n";
+    "testName,status,sessionId,failureStep,exceptionMessage,failureReason,Responsible QA\n";
 
   // If no data, add a placeholder message
   if (data.length === 0) {
@@ -169,6 +169,7 @@ export const convertDataToCsv = (data: TestData[]): string => {
         escapeCsvField(item.failureStep),
         escapeCsvField(item.exceptionMessage),
         escapeCsvField(item.failureReason),
+        escapeCsvField(item.responsibleQA || ""),
       ].join(",") + "\n";
   });
 
