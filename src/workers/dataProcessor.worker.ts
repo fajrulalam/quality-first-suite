@@ -34,8 +34,9 @@ self.onmessage = function (e) {
 
       // Schedule next chunk processing
       setTimeout(processChunk, 0);
-    } catch (error: any) {
-      self.postMessage({ type: "error", error: error.message });
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      self.postMessage({ type: "error", error: errorMessage });
     }
   }
 
