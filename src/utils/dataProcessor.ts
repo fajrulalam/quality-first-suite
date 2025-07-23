@@ -142,6 +142,40 @@ export const convertRegressionDataToCsv = (data: TestData[]): string => {
   return csvContent;
 };
 
+// Function to convert API data to CSV for API analysis
+export const convertApiDataToCsv = (data: TestData[]): string => {
+  // CSV header - column order: testname, status, scenario, failure step, exception message, Jira Id, responsible QA
+  let csvContent =
+    "testName,status,scenario,failureStep,exceptionMessage,jiraId,responsibleQA\n";
+
+  // If no data, add a placeholder message
+  if (data.length === 0) {
+    csvContent += "No API test cases found in the HTML file,,,,,,";
+    return csvContent;
+  }
+
+  // Add each row
+  data.forEach((item) => {
+    const escapeCsvField = (field: string) => {
+      // Escape quotes and wrap in quotes
+      return `"${(field || "").replace(/"/g, '""')}"`;
+    };
+
+    csvContent +=
+      [
+        escapeCsvField(item.testName),
+        escapeCsvField(item.status),
+        escapeCsvField(item.scenario || ""),
+        escapeCsvField(item.failureStep),
+        escapeCsvField(item.exceptionMessage),
+        escapeCsvField(item.jiraId || ""),
+        escapeCsvField(item.responsibleQA || ""),
+      ].join(",") + "\n";
+  });
+
+  return csvContent;
+};
+
 // Function to convert data to CSV for general analysis
 export const convertDataToCsv = (data: TestData[]): string => {
   // CSV header

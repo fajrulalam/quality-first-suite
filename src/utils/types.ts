@@ -9,4 +9,6 @@ export interface TestData {
   issueType?: string;
   rootCause?: string;
   responsibleQA?: string;
+  scenario?: string;
+  jiraId?: string;
 }

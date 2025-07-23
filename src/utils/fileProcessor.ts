@@ -1,8 +1,73 @@
-import { parseHtmlToData } from './htmlParser';
-import { convertDataToCsv, convertRegressionDataToCsv, combineRegressionData } from './dataProcessor';
+import { parseHtmlToData, parseApiHtmlToData } from './htmlParser';
+import { convertDataToCsv, convertRegressionDataToCsv, combineRegressionData, convertApiDataToCsv } from './dataProcessor';
 import { TestData } from './types';
 import { createWorker } from './worker';
 import { orderTestCases } from './orderingUtils';
+
+// Setup worker and handlers for API file processing
+export const processApiFile = (
+  file: File,
+  callbacks: {
+    setIsProcessing: (isProcessing: boolean) => void;
+    setProgress: (progress: number) => void;
+    setCsvData: (csvData: string) => void;
+    setFileName: (fileName: string) => void;
+    setShowPreview: (showPreview: boolean) => void;
+    setDragActive: (dragActive: boolean) => void;
+  }
+) => {
+  const { setIsProcessing, setProgress, setCsvData, setFileName, setShowPreview, setDragActive } = callbacks;
+  
+  if (!file || !file.name.toLowerCase().endsWith(".html")) {
+    alert("Please upload an HTML file");
+    return;
+  }
+
+  setIsProcessing(true);
+  setProgress(0);
+
+  const worker = createWorker();
+  if (!worker) {
+    alert("Web Workers are not supported in your browser");
+    setIsProcessing(false);
+    return;
+  }
+
+  worker.onmessage = (e: MessageEvent) => {
+    const { type, percentComplete, result, error } = e.data;
+
+    if (type === "progress") {
+      setProgress(percentComplete);
+    } else if (type === "complete") {
+      // Parse HTML to structured data using API parser
+      const parsedData = parseApiHtmlToData(result);
+
+      // Convert data to CSV using API data converter
+      const processedCsvData = convertApiDataToCsv(parsedData);
+
+      // Store the CSV data and filename for preview
+      setCsvData(processedCsvData);
+      setFileName(file.name.replace(".html", "_api_analysis"));
+
+      // Show the preview
+      setShowPreview(true);
+      setIsProcessing(false);
+      setDragActive(false);
+      setProgress(0);
+    } else if (type === "error") {
+      alert(`Error processing file: ${error}`);
+      setIsProcessing(false);
+      setDragActive(false);
+      setProgress(0);
+    }
+  };
+
+  // Start processing
+  worker.postMessage({
+    file,
+    chunkSize: 2 * 1024 * 1024, // 2MB chunks
+  });
+};
 
 // Setup worker and handlers for general file processing
 export const processGeneralFile = (

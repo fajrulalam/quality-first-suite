@@ -1,5 +1,145 @@
 import { TestData } from './types';
 
+// Parse API HTML content into structured TestData array
+export const parseApiHtmlToData = (htmlContent: string): TestData[] => {
+  // Create a DOM parser
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlContent, "text/html");
+
+  // Find all test containers (li.test-item)
+  const testContainers = doc.querySelectorAll("li.test-item");
+  const results: TestData[] = [];
+
+  // Process each test case
+  testContainers.forEach((testContainer) => {
+    // Extract test name - from p.name or h5.test-status
+    let testName = "";
+    const testNameElement = testContainer.querySelector(
+      "div.test-detail p.name"
+    );
+    const testStatusElement = testContainer.querySelector(
+      "h5.test-status"
+    );
+    
+    if (testNameElement) {
+      // Get text content up to the first h6 tag (excluding h6 content)
+      const testNameContent = testNameElement.childNodes[0];
+      if (testNameContent) {
+        testName = testNameContent.textContent?.trim() || "";
+      }
+    } else if (testStatusElement) {
+      // Get text content up to the first h6 tag
+      const testStatusContent = testStatusElement.childNodes[0];
+      if (testStatusContent) {
+        testName = testStatusContent.textContent?.trim() || "";
+      }
+    }
+
+    // Extract scenario name from h6 element containing "Scenario Name :" (case insensitive)
+    let scenario = "";
+    const scenarioElements = testContainer.querySelectorAll("h6");
+    scenarioElements.forEach((element) => {
+      const content = element.textContent || "";
+      if (content.toLowerCase().includes("scenario name")) {
+        const splitContent = content.split(":");
+        if (splitContent.length > 1) {
+          scenario = splitContent[1].trim();
+        } else {
+          scenario = content.replace(/scenario\s+name/i, "").trim();
+        }
+      }
+    });
+
+    // Extract status (Pass, Failed, Skip)
+    let status = "";
+    const passElement = testContainer.querySelector(".test-status.text-pass");
+    const failElement = testContainer.querySelector(".test-status.text-fail");
+    const skipElement = testContainer.querySelector(".badge.log.skip-bg");
+
+    if (passElement) {
+      status = "Pass";
+    } else if (failElement) {
+      status = "Failed";
+    } else if (skipElement) {
+      status = "Skip";
+    }
+
+    // Extract failure step if status is Failed
+    let failureStep = "";
+    let exceptionMessage = "";
+
+    if (status === "Failed") {
+      // Extract failure step (h5 with color: black containing "Test Step:")
+      const failureStepElements = testContainer.querySelectorAll(
+        "h5[style*='color: black']"
+      );
+      failureStepElements.forEach((element) => {
+        const content = element.textContent || "";
+        if (content.includes("Test Step:")) {
+          const splitContent = content.split(":");
+          if (splitContent.length > 1) {
+            failureStep = splitContent[1].trim();
+          }
+        }
+      });
+
+      // Extract exception message from textarea with class code-block
+      const codeBlockElement = testContainer.querySelector(
+        "textarea.code-block"
+      );
+      if (codeBlockElement && codeBlockElement.textContent) {
+        // Extract text before the colon
+        const match = codeBlockElement.textContent.match(/^([^:]+)/);
+        if (match && match[1]) {
+          exceptionMessage = match[1].trim();
+        } else {
+          exceptionMessage = codeBlockElement.textContent.trim();
+        }
+      }
+    }
+
+    // Extract Jira ID from span with badge-pill badge-default containing "QAAUT-"
+    let jiraId = "";
+    const badgeElements = testContainer.querySelectorAll(
+      ".badge.badge-pill.badge-default"
+    );
+    badgeElements.forEach((element) => {
+      const content = element.textContent || "";
+      if (content.includes("QAAUT-")) {
+        jiraId = content.trim();
+      }
+    });
+
+    // Extract responsible QA from badge-pill elements (excluding those with "QAAUT-")
+    const responsibleQAList: string[] = [];
+    badgeElements.forEach((element) => {
+      const content = element.textContent || "";
+      if (!content.includes("QAAUT-") && 
+          !content.includes("Supply") && 
+          !content.includes("Demand") && 
+          content.trim() !== "") {
+        responsibleQAList.push(content.trim());
+      }
+    });
+    const responsibleQA = responsibleQAList.join(', ');
+
+    // Add to results array
+    results.push({
+      testName,
+      scenario,
+      status,
+      failureStep,
+      exceptionMessage,
+      jiraId,
+      responsibleQA,
+      sessionId: "", // Not required for API analysis
+      failureReason: "", // Not required for API analysis
+    });
+  });
+
+  return results;
+};
+
 // Parse HTML content into structured TestData array
 export const parseHtmlToData = (htmlContent: string): TestData[] => {
   // Remove exception section

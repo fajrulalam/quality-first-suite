@@ -10,6 +10,7 @@ import {
   processGeneralFile,
   processFirstRunFile,
   processSecondRunFile,
+  processApiFile,
 } from "@/utils/fileProcessor";
 import { parseCSVForPreview } from "@/utils/dataProcessor";
 import { getPassedInClass } from "@/utils/uiHelpers";
@@ -19,7 +20,7 @@ import { orderTestCases } from "../utils/orderingUtils";
 
 export default function Home() {
   // Analysis mode selection
-  const [analysisMode, setAnalysisMode] = useState<"general" | "regression">(
+  const [analysisMode, setAnalysisMode] = useState<"general" | "regression" | "api">(
     "general"
   );
 
@@ -118,6 +119,16 @@ export default function Home() {
           matchOrderExactly,
         });
       }
+    } else if (analysisMode === "api") {
+      // Process API file
+      processApiFile(file, {
+        setIsProcessing,
+        setProgress,
+        setCsvData,
+        setFileName,
+        setShowPreview,
+        setDragActive,
+      });
     }
   };
 
@@ -157,9 +168,12 @@ export default function Home() {
       return;
     }
 
-    navigator.clipboard.writeText(csvData).then(
+    // Convert commas to semicolons for clipboard copy
+    const semicolonSeparatedData = csvData.replace(/,/g, ";");
+
+    navigator.clipboard.writeText(semicolonSeparatedData).then(
       () => {
-        setCopySuccess("Copied to clipboard!");
+        setCopySuccess("Copied to clipboard with semicolons!");
         setTimeout(() => setCopySuccess(""), 2000);
       },
       () => {
@@ -340,7 +354,7 @@ export default function Home() {
                   Select Analysis Mode
                 </h2>
                 <div className="flex justify-center space-x-3">
-                  {(["general", "regression"] as const).map((mode) => (
+                  {(["general", "regression", "api"] as const).map((mode) => (
                     <button
                       key={mode}
                       onClick={() => {
@@ -359,17 +373,21 @@ export default function Home() {
                         }`}
                     >
                       {mode === "general"
-                        ? "General Analysis"
-                        : "Regression Analysis"}
+                        ? "Web Failure Analysis"
+                        : mode === "regression"
+                        ? "App Regression Analysis"
+                        : "API Failure Analysis"}
                     </button>
                   ))}
                 </div>
                 <p className="text-center text-md text-[var(--text-secondary)] mt-6">
                   {analysisMode === "general"
                     ? "Upload a single HTML report for detailed test case extraction."
-                    : firstRunProcessed
-                    ? "Upload the 2nd run HTML report to compare with the 1st run."
-                    : "Upload the 1st run HTML report, then the 2nd run for comparison."}
+                    : analysisMode === "regression"
+                    ? firstRunProcessed
+                      ? "Upload the 2nd run HTML report to compare with the 1st run."
+                      : "Upload the 1st run HTML report, then the 2nd run for comparison."
+                    : "Upload an API HTML report for detailed API test case extraction."}
                 </p>
               </section>
 
@@ -633,11 +651,23 @@ export default function Home() {
                               "px-6 py-4 text-sm text-[var(--text-secondary)] whitespace-nowrap";
                             if (cellIndex === 1) {
                               // Status column
-                              cellClass = `px-6 py-4 text-sm font-semibold whitespace-nowrap ${
-                                status === "FAIL"
-                                  ? "text-red-600"
-                                  : "text-green-600"
-                              }`;
+                              if (analysisMode === "api") {
+                                // API status colors: Skip (yellow), Pass (green), Failed (red)
+                                cellClass = `px-6 py-4 text-sm font-semibold whitespace-nowrap ${
+                                  status === "Skip"
+                                    ? "text-amber-500" // Yellow for Skip
+                                    : status === "Pass"
+                                    ? "text-green-600" // Green for Pass
+                                    : "text-red-600" // Red for Failed
+                                }`;
+                              } else {
+                                // Original status colors for other modes
+                                cellClass = `px-6 py-4 text-sm font-semibold whitespace-nowrap ${
+                                  status === "FAIL"
+                                    ? "text-red-600"
+                                    : "text-green-600"
+                                }`;
+                              }
                             } else if (cellIndex === 2 || cellIndex === 4) {
                               // Session ID & Exception Message
                               cellClass =
