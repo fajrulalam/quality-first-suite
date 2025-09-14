@@ -1,0 +1,29 @@
+=== Enhanced RAG System Test ===
+Timestamp: 2025-07-12T23:19:01.001Z
+User Query: what do I do if I raise a defect but the issue is already in production?
+
+=== Process Steps ===
+✅ Generating multiple CQL search strategies - Generated 4 search strategies
+✅ Searching Confluence with multiple queries
+✅ Ranking pages by relevance using LLM - Ranked 13 pages
+✅ Aggregating content within token limits - Selected 0 pages (0 tokens)
+✅ Generating enhanced response - Generated response from 0 sources
+
+=== Search Results ===
+Found 13 total pages
+Used 0 pages
+Token usage: 0/400
+
+=== Source Documents ===
+
+
+=== Generated Response ===
+Based on the available documentation, I found no information on how to proceed if a defect is raised but the issue is already in production.  Therefore, I cannot provide a specific answer to your question.
+
+
+=== System Performance ===
+Multi-source retrieval: LIMITED
+Relevance ranking: NOT APPLIED
+Token management: WITHIN LIMITS
+
+=== End of Test ===

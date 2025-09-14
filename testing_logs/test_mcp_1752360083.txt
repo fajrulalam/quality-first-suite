@@ -1,0 +1,66 @@
+=== RAG Testing Log ===
+Timestamp: 2025-07-12T22:41:23.022Z
+User Query: Find me information about defect processes and how to handle bugs in our system
+Generated CQL: title ~ "SOP" AND (title ~ "defect" OR title ~ "bug")
+
+=== Search Results ===
+{
+  "results": [
+    {
+      "id": "3405447932",
+      "type": "page",
+      "status": "current",
+      "title": "SOP: Monitoring defects & production issues",
+      "childTypes": {},
+      "macroRenderedOutput": {},
+      "restrictions": {},
+      "_expandable": {
+        "container": "",
+        "metadata": "",
+        "extensions": "",
+        "operations": "",
+        "children": "",
+        "history": "/rest/api/content/3405447932/history",
+        "ancestors": "",
+        "body": "",
+        "version": "",
+        "descendants": "",
+        "space": "/rest/api/space/TD"
+      },
+      "_links": {
+        "webui": "/spaces/TD/pages/3405447932/SOP+Monitoring+defects+production+issues",
+        "self": "https://borobudur.atlassian.net/wiki/rest/api/content/3405447932",
+        "tinyui": "/x/-AL7yg"
+      }
+    }
+  ],
+  "start": 0,
+  "limit": 1,
+  "size": 1,
+  "_links": {
+    "base": "https://borobudur.atlassian.net/wiki",
+    "context": "/wiki",
+    "next": "/rest/api/content/search?next=true&cursor=_f_MQ%3D%3D_sa_WyJcdDM0MDU0NDc5MzIgOTMvQnRDQGFualAmbCM4R0IxQWEgY3AiXQ%3D%3D&limit=1&start=1&cql=title+~+%22SOP%22+AND+(title+~+%22defect%22+OR+title+~+%22bug%22)",
+    "self": "https://borobudur.atlassian.net/wiki/rest/api/content/search?cql=title+~+%22SOP%22+AND+(title+~+%22defect%22+OR+title+~+%22bug%22)"
+  }
+}
+
+=== Selected Page ===
+Title: SOP: Monitoring defects & production issues
+Page ID: 3405447932
+URL: https://borobudur.atlassian.net/wiki/spaces/TD/pages/3405447932/SOP+Monitoring+defects+production+issues
+
+=== Fetching Page Content ===
+Page Content Summary:
+Title: SOP: Monitoring defects & production issues
+Space: Tech Directorate (TD)
+Last Modified: 2025-02-13T10:28:37.559Z
+Modified By: B Radhakrishna Pai
+
+Content Preview (first 1000 chars):
+<h2>Problem Statement</h2><p>It was getting increasingly difficult to track defects and issues raised in NCT board provided that anybody can create JIRAs and historically a lot of tickets are created in NCT when people are not sure of the team <ac:emoticon ac:name="blue-star" ac:emoji-shortname=":smiling_face_with_tear:" ac:emoji-id="1f972" ac:emoji-fallback="🥲" /> </p><ul><li><p>Defects are an important metric to monitor since it is a negative OKR from developer perspective</p></li><li><p>Production issues are important to monitor and fix periodically as it had direct/indirect impact on live users which are crucial to fix especially before major events like OTW</p></li></ul><p>To solve the above problem statements, we came up with the following SOP in Core team.</p><h2>1. Discuss all the defects before end of sprint</h2><p>Created this filter in Core team for monitoring defects- <a href="https://borobudur.atlassian.net/issues/?filter=18077">Ninja Core Defects</a></p><p><strong>Filter...
+
+=== Full Content ===
+<h2>Problem Statement</h2><p>It was getting increasingly difficult to track defects and issues raised in NCT board provided that anybody can create JIRAs and historically a lot of tickets are created in NCT when people are not sure of the team <ac:emoticon ac:name="blue-star" ac:emoji-shortname=":smiling_face_with_tear:" ac:emoji-id="1f972" ac:emoji-fallback="🥲" /> </p><ul><li><p>Defects are an important metric to monitor since it is a negative OKR from developer perspective</p></li><li><p>Production issues are important to monitor and fix periodically as it had direct/indirect impact on live users which are crucial to fix especially before major events like OTW</p></li></ul><p>To solve the above problem statements, we came up with the following SOP in Core team.</p><h2>1. Discuss all the defects before end of sprint</h2><p>Created this filter in Core team for monitoring defects- <a href="https://borobudur.atlassian.net/issues/?filter=18077">Ninja Core Defects</a></p><p><strong>Filter query: </strong></p><ac:structured-macro ac:name="code" ac:schema-version="1" ac:macro-id="8725cfed-c52d-4b34-b680-8aa463f0479d"><ac:plain-text-body><![CDATA[project = NCT AND type = Defect ORDER BY created DESC, assignee ASC]]></ac:plain-text-body></ac:structured-macro><p>Scheduled a meeting with all the devs in core team, once in 3 weeks just before the end of the sprint, to double check that the sprint defects are updated correctly for following fields:</p><ul><li><p>Defect Reason</p></li><li><p>Classification</p></li><li><p>QA Leakage</p></li><li><p>Found in Phase</p></li><li><p>Resolutions</p></li><li><p>Environment</p></li></ul><p /><p /><ac:image ac:align="center" ac:layout="center" ac:original-height="647" ac:original-width="413" ac:custom-width="true" ac:width="209"><ri:attachment ri:filename="Screenshot 2025-02-10 at 3.41.42 PM.png" ri:version-at-save="1" /></ac:image><p /><ac:image ac:align="center" ac:layout="center" ac:original-height="357" ac:original-width="1535" ac:custom-width="true" ac:width="760"><ri:attachment ri:filename="Screenshot 2025-02-10 at 6.32.05 PM.png" ri:version-at-save="1" /></ac:image><hr /><h2>2. Discuss &amp; plan production issues</h2><p>Created this filter in Core team for monitoring production issues - <a href="https://borobudur.atlassian.net/issues/?filter=18037">Ninja Core Production Issues</a></p><p><strong>Filter query:</strong></p><ac:structured-macro ac:name="code" ac:schema-version="1" ac:macro-id="238298be-05a1-4471-ac0e-3fba6a24acd7"><ac:plain-text-body><![CDATA[project in (NCT) AND issuetype in (Bug) AND "Environments[Dropdown]" = Production AND status not in (Invalid, Done) AND project = NCT ORDER BY priority DESC]]></ac:plain-text-body></ac:structured-macro><p>We discuss this filter every 3 weeks during pre-grooming and ensure that the tickets are groomed for the upcoming sprint based on priority. This cadence ensures that production issues are timely fixed</p><p /><ac:image ac:align="center" ac:layout="center" ac:original-height="612" ac:original-width="409" ac:custom-width="true" ac:width="185"><ri:attachment ri:filename="Screenshot 2025-02-10 at 3.55.55 PM.png" ri:version-at-save="1" /></ac:image><p> </p><ac:image ac:align="center" ac:layout="center" ac:original-height="521" ac:original-width="1532" ac:custom-width="true" ac:width="760"><ri:attachment ri:filename="Screenshot 2025-02-10 at 3.51.57 PM.png" ri:version-at-save="1" /></ac:image><hr /><h2>3. Slack Integration</h2><p>Enabled a Jira slack integration such that, whenever a defect or bug is created, it will post a message in our internal slack channel. This way, we ensure that</p><ul><li><p>The devs are timely informed to work on defects</p></li><li><p>Everyone has visibility</p></li><li><p>Unintentional Jira creation is identified (wrong team etc.)</p></li></ul><p /><ac:image ac:align="center" ac:layout="center" ac:original-height="114" ac:original-width="669" ac:custom-width="true" ac:width="669"><ri:attachment ri:filename="Screenshot 2025-02-10 at 4.00.24 PM.png" ri:version-at-save="1" /></ac:image><p /><ac:image ac:align="center" ac:layout="center" ac:original-height="297" ac:original-width="681" ac:custom-width="true" ac:width="681"><ri:attachment ri:filename="Screenshot 2025-02-10 at 4.00.06 PM.png" ri:version-at-save="2" /></ac:image><p /><p />
+
+=== End of Log ===

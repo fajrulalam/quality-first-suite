@@ -1,0 +1,545 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>API Automation Report</title>
+<link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/extent-framework/extent-github-cdn@b00a2d0486596e73dd7326beacf352c639623a0e/commons/img/logo.png">
+<link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/extent-framework/extent-github-cdn@b00a2d0486596e73dd7326beacf352c639623a0e/commons/img/logo.png">
+<link href="https://cdn.jsdelivr.net/gh/extent-framework/extent-github-cdn@d6562a79075e061305ccfdb82f01e5e195e2d307/spark/css/spark-style.css" rel="stylesheet" />
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/extent-framework/extent-github-cdn@7cc78ce/spark/js/jsontree.js"></script>
+<style type="text/css">.test-wrapper .test-content .test-content-detail .detail-head .info {
+padding-left: 0;
+padding-bottom: 75px;
+} .text-pass {
+color: #000000 !important;
+font-weight: bold;
+} .test-wrapper .test-list .test-list-wrapper .test-list-item .test-item .test-detail .name {
+color: #000000;
+color: #000000;
+} h6 {
+font-size: 12px;
+font-weight: 500px;
+color: #000000;
+} a {
+color: #000000;
+font-weight: bold;
+} .category-container .card .card-header p {
+display: none;
+} .category-container .card .card-header:after {
+content: 'Tribe Name';
+} .device-container .card .card-header p {
+display: none;
+} .device-container .card .card-header:after {
+content: 'API Name';
+} .fa-tablet:before {
+content: "\f0ae";
+} .category-view .test-list .test-list-tools .pull-left a span {
+display: none;
+} .category-view .test-list .test-list-tools .pull-left a:after {
+content: 'Tribe Name';
+font-size: 14px!important;
+} .device-view .test-list .test-list-tools .pull-left a span {
+display: none;
+} .device-view .test-list .test-list-tools .pull-left a:after {
+content: 'API Name';
+font-size: 14px!important;
+} .nav-logo .logo {
+background-image: url('https://www.tiket.com/home-ms-v4/assets/Icon-200.png');
+}</style></head><body class="spa -report standard">
+  <div class="app">
+    <div class="layout">
+<div class="header navbar">
+<div class="vheader">
+<div class="nav-logo">
+<a href="#">
+<div class="logo" style="background-image: url('https://cdn.jsdelivr.net/gh/extent-framework/extent-github-cdn@b00a2d0486596e73dd7326beacf352c639623a0e/commons/img/logo.png')"></div>
+</a>
+</div>
+<ul class="nav-left">
+<li class="search-box">
+<a class="search-toggle" href="#">
+<i class="search-icon fa fa-search"></i>
+<i class="search-icon-close fa fa-close"></i>
+</a>
+</li>
+<li class="search-input"><input id="search-tests" class="form-control" type="text" placeholder="Search..."></li>
+</ul>
+<ul class="nav-right">
+<li class="m-r-10">
+<a href="#"><span class="badge badge-primary">API Automation Report</span></a>
+</li>
+<li class="m-r-10">
+<a href="#"><span class="badge badge-primary">Jul 22, 2025 10:05:28 AM</span></a>
+</li>
+</ul>
+</div>
+</div><div class="side-nav">
+<div class="side-nav-inner">
+<ul class="side-nav-menu">
+<li class="nav-item dropdown" onclick="toggleView('test-view')">
+<a id="nav-test" class="dropdown-toggle" href="#">
+<span class="ico"><i class="fa fa-list"></i></span>
+</a>
+</li>
+<li class="nav-item dropdown" onclick="toggleView('exception-view')">
+<a id="nav-exception" class="dropdown-toggle" href="#">
+<span class="ico"><i class="fa fa-bug"></i></span>
+</a>
+</li>
+<li class="nav-item dropdown" onclick="toggleView('category-view')">
+<a id="nav-category" class="dropdown-toggle" href="#">
+<span class="ico"><i class="fa fa-tag"></i></span>
+</a>
+</li>
+<li class="nav-item dropdown" onclick="toggleView('device-view')">
+<a id="nav-device" class="dropdown-toggle" href="#">
+<span class="ico"><i class="fa fa-tablet"></i></span>
+</a>
+</li>
+<li class="nav-item dropdown" onclick="toggleView('author-view')">
+<a id="nav-author" class="dropdown-toggle" href="#">
+<span class="ico"><i class="fa fa-user"></i></span>
+</a>
+</li>
+<li class="nav-item dropdown" onclick="toggleView('dashboard-view')">
+<a id="nav-dashboard" class="dropdown-toggle" href="#">
+<span class="ico"><i class="fa fa-bar-chart"></i></span>
+</a>
+</li>
+</ul>
+</div>
+</div>      <div class="vcontainer">
+        <div class="main-content">
+<div class="test-wrapper row view test-view">
+  <div class="test-list">
+    <div class="test-list-tools">
+<ul class="tools pull-left">
+<li><a href="#"><span class="font-size-14">Tests</span></a></li>
+</ul>
+<ul class="tools text-right">
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-exclamation-circle"></i></a>
+<ul id="status-toggle" class="dropdown-menu dropdown-md p-v-0">
+<a class="dropdown-item" status="pass" href="#"><span>Pass</span><span class="status success"></span></a>
+<a class="dropdown-item" status="fail" href="#"><span>Fail</span><span class="status danger"></span></a>
+<a class="dropdown-item" status="skip" href="#"><span>Skip</span><span class="status warning"></span></a>
+<div class="dropdown-divider"></div>
+<a status="clear" class="dropdown-item" href="#"><span>Clear</span><span class="pull-right"><i class="fa fa-close"></i></span></a>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i></a>
+<ul id="author-toggle" class="dropdown-menu dropdown-md p-v-0">
+<a class="dropdown-item" href="#">Nishtha</a><a class="dropdown-item" href="#">Vipul</a><a class="dropdown-item" href="#">Dendi</a><a class="dropdown-item" href="#">Felicia</a><a class="dropdown-item" href="#">ArbiJS</a><a class="dropdown-item" href="#">FajrulAlam</a><a class="dropdown-item" href="#">Anurita</a><a class="dropdown-item" href="#">Abhishek</a>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-tag"></i></a>
+<ul id="tag-toggle" class="dropdown-menu dropdown-md p-v-0">
+<a class="dropdown-item" href="#">Extranet</a><a class="dropdown-item" href="#">Demand</a><a class="dropdown-item" href="#">Supply</a>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-tablet"></i></a>
+<ul id="device-toggle" class="dropdown-menu dropdown-md p-v-0">
+<a class="dropdown-item" href="#">[Supply][QAAUT-8851]HotelCurrencyExchangeGET</a><a class="dropdown-item" href="#">[Demand][QAAUT-1352]HotelTncReschedule</a><a class="dropdown-item" href="#">[Demand][QAAUT-1345]hotelDownloadVoucher</a><a class="dropdown-item" href="#">[Demand][QAAUT-8867]HotelLandingpageMasterContentGET</a><a class="dropdown-item" href="#">[Demand][QAAUT-8868]HotelLandingPageV2ModulePOST</a><a class="dropdown-item" href="#">[Supply][QAAUT-8849]HotelPricePrebookPOST</a><a class="dropdown-item" href="#">[Extranet][QAAUT-9179]HotelNativeAvailPOST</a><a class="dropdown-item" href="#">[Supply][QAAUT-9147]HotelBedsIntegratorConfirmV2POST</a><a class="dropdown-item" href="#">[Extranet][QAAUT-9141]HotelNativeAPIBookConfirmPOST</a><a class="dropdown-item" href="#">[Extranet][QAAUT-8837]HotelNativeSearchAllRooms</a><a class="dropdown-item" href="#">[Supply][QAAUT-14040]HotelPriceRoomMultiDatesPOST</a><a class="dropdown-item" href="#">[Supply][QAAUT-21851]HotelBedsIntegratorRefundPOST</a><a class="dropdown-item" href="#">[Supply][QAAUT-21849]HotelExpediaRapidIntegratorRefundPOST</a><a class="dropdown-item" href="#">[Demand][QAAUT-1354]hotelConfirmPayment</a><a class="dropdown-item" href="#">[Supply][QAAUT-16784]HotelAgodaIntegratorBookingListPOST</a><a class="dropdown-item" href="#">[Demand][QAAUT-8864]HotelGetMasterContentPOST</a><a class="dropdown-item" href="#">[Supply][QAAUT-13989]HotelPricePrebookMultiOrderPOST</a><a class="dropdown-item" href="#">[Extranet][QAAUT-15873]HotelNativeSearchPOST</a><a class="dropdown-item" href="#">[Extranet][QAAUT-8841]HotelNativeAvailBookPOST</a><a class="dropdown-item" href="#">[Extranet][QAAUT-9151]HotelApiAddOnListGET</a><a class="dropdown-item" href="#">[Supply][QAAUT-16735]HotelV2BookPOST</a><a class="dropdown-item" href="#">[Extranet][QAAUT-9140]HotelNativeAPIBookCancelPOST</a><a class="dropdown-item" href="#">[Demand][QAAUT-8861]HotelV2SearchPOST</a><a class="dropdown-item" href="#">[Supply][QAAUT-21848]HotelExpediaIntegratorConfirmPOST</a><a class="dropdown-item" href="#">[Demand][QAAUT-13074]HotelV4PrebookPOST</a><a class="dropdown-item" href="#">[Demand][QAAUT-802]HotelEnterPdpPOST</a><a class="dropdown-item" href="#">[Demand][QAAUT-1350]HotelSearchFilterPOST</a><a class="dropdown-item" href="#">[Demand][QAAUT-1351]HotelCartPrebookDetail</a><a class="dropdown-item" href="#">[Extranet][QAAUT-9137]HotelNativeB2BApiAvailPOST</a><a class="dropdown-item" href="#">[Demand][QAAUT-1348]HotelSearchSimilar</a><a class="dropdown-item" href="#">[Supply][QAAUT-9162]HotelTiketIntegratorConfirmV2POST</a><a class="dropdown-item" href="#">[Extranet][QAAUT-9164]HotelNativeApiV2BookRevisionPOST</a><a class="dropdown-item" href="#">[Demand][QAAUT-1347]HotelSearchLandingPage</a><a class="dropdown-item" href="#">[Supply][QAAUT-9145]HotelAgodaIntegratorConfirmPaidV2POST</a><a class="dropdown-item" href="#">[Extranet][QAAUT-9146]HotelDealsCalculatePOST</a><a class="dropdown-item" href="#">[Supply][QAAUT-8842]HotelPriceEngineBookPOST</a><a class="dropdown-item" href="#">[Demand][QAAUT-999]hotelBookDetail</a><a class="dropdown-item" href="#">[Demand][QAAUT-1275]HotelBooking</a><a class="dropdown-item" href="#">[Demand][QAAUT-1353]hotelGroupFilter</a><a class="dropdown-item" href="#">[Demand][QAAUT-1346]HotelSearchContent</a><a class="dropdown-item" href="#">[Demand][QAAUT-8865]HotelLandingSearchPOST</a><a class="dropdown-item" href="#">[Extranet][QAAUT-15874]HotelNativeAPIAvailPriceSimulationPOST</a><a class="dropdown-item" href="#">[Extranet][QAAUT-9143]HotelNativeAPIBookRefundPOST</a><a class="dropdown-item" href="#">[Extranet][QAAUT-9139]HotelNativeAPIBookPOST</a><a class="dropdown-item" href="#">[Demand][QAAUT-8870]HotelLandingPageV2ModuleGET</a><a class="dropdown-item" href="#">[Extranet][QAAUT-8885]HotelNativeAPIV2BookRefundPOST</a>
+</ul>
+</li>
+</ul>
+</div>    <div class="test-list-wrapper scrollable">
+      <ul class="test-list-item">
+        <li class="test-item"  status="skip" test-id="1"
+          author="Dendi Abhishek"
+          tag=""
+          device="[Demand][QAAUT-1345]hotelDownloadVoucher">
+          <div class="test-detail">
+            <p class="name">testHotelDownloadVoucher<h6>Scenario Name : Check the language in response when request header is en</h6></p>
+            <p class="text-sm">
+              <span>10:05:29 AM</span> / <span>00:00:36:385</span>
+              <span class="badge skip-bg log float-right">Skip</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-skip">testHotelDownloadVoucher<h6>Scenario Name : Check the language in response when request header is en</h6></h5>
+<span class='badge badge-success'>07.22.2025 10:05:29 AM</span>
+<span class='badge badge-danger'>07.22.2025 10:06:05 AM</span>
+<span class='badge badge-default'>00:00:36:385</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=1</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">Dendi</span>
+<span class="badge badge-pill badge-default">Abhishek</span>
+<span class="badge badge-pill badge-default">[Demand][QAAUT-1345]hotelDownloadVoucher</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log skip-bg">Skip</span></td>
+        <td>10:06:05 AM</td>
+        <td>
+          <h1 style="color: yellow">Test skipped: testHotelDownloadVoucher: testRailId missingTestID</h1>
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+  <div class="mt-4">  <div class="accordion" role="tablist">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-toolbar node-info">
+            <ul class="list-inline d-none d-sm-block">
+              <li><span class="badge pass-bg log ">Pass</span></li>
+              <li><span class='badge badge-default'>00:00:016</span></li>
+              <li></li>
+            </ul>
+          </div>
+          <div class="card-title">
+            <a class="node " id="7"><span>Start</span></a>
+            <div class="node-attr">
+            </div>
+          </div>
+        </div>
+        <div class="collapse">
+          <div class="card-body">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>10:05:29 AM</td>
+        <td>
+          <h1 style="color: #04a1f4">Test start: testHotelDownloadVoucher</h1>
+        </td>
+      </tr>
+  </tbody>
+</table>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-toolbar node-info">
+            <ul class="list-inline d-none d-sm-block">
+              <li><span class="badge warning-bg log ">Warning</span></li>
+              <li><span class='badge badge-default'>00:33:768</span></li>
+              <li></li>
+            </ul>
+          </div>
+          <div class="card-title">
+            <a class="node " id="13"><span><h5 style="color: black">Test Step: Get prerequisite</h5></span></a>
+            <div class="node-attr">
+            </div>
+          </div>
+        </div>
+        <div class="collapse">
+          <div class="card-body">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>10:05:33 AM</td>
+        <td>
+          call MemberSessionV1 API is done, response time: 482ms
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>10:05:35 AM</td>
+        <td>
+          Expected Status Code => 200<br>Actual Status Code => 200
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>10:05:35 AM</td>
+        <td>
+          call MemberUNMAuthLoginPOST API is done, response time: 150ms
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>10:05:35 AM</td>
+        <td>
+          Expected Status Code => 200<br>Actual Status Code => 200
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>10:05:35 AM</td>
+        <td>
+          call MemberUNMAuthCodeVerifyGET API is done, response time: 56ms
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>10:05:35 AM</td>
+        <td>
+          Expected Status Code => 200<br>Actual Status Code => 200
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>10:05:35 AM</td>
+        <td>
+          call MemberV3AuthUNMServiceTiketPOST API is done, response time: 221ms
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log warning-bg">Warning</span></td>
+        <td>10:06:05 AM</td>
+        <td>
+          call YourActiveOrderGET API is failed, response time: 30089ms
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log warning-bg">Warning</span></td>
+        <td>10:06:05 AM</td>
+        <td>
+          <b>Expected status code <200> but was <408></b><br>{"code":"UNKNOWN_ERROR","message":"unknown error","errors":null,"data":null,"serverTime":1753153565608}
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log warning-bg">Warning</span></td>
+        <td>10:06:05 AM</td>
+        <td>
+          Skip Exception due to test data issue
+        </td>
+      </tr>
+  </tbody>
+</table>
+          </div>
+        </div>
+  <div class="accordion" role="tablist">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-toolbar node-info">
+            <ul class="list-inline d-none d-sm-block">
+              <li><span class="badge pass-bg log ">Pass</span></li>
+              <li><span class='badge badge-default'>00:00:013</span></li>
+              <li></li>
+            </ul>
+          </div>
+          <div class="card-title">
+            <a class="node " id="17"><span><h6 style="color: black";>Curl command for api : MemberSessionV1</h6></span></a>
+            <div class="node-attr">
+            </div>
+          </div>
+        </div>
+        <div class="collapse">
+          <div class="card-body">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>10:05:33 AM</td>
+        <td>
+          <br>curl --location --request POST 'https://preprod.tiket.com/ms-gateway/tix-member-session/v1/session'  --header 'Accept:*/*'  --header 'X-Audience:tiket.com'  --header 'Content-Type:application/json'  --data-raw '{}'
+        </td>
+      </tr>
+  </tbody>
+</table>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-toolbar node-info">
+            <ul class="list-inline d-none d-sm-block">
+              <li><span class="badge pass-bg log ">Pass</span></li>
+              <li><span class='badge badge-default'>00:00:002</span></li>
+              <li></li>
+            </ul>
+          </div>
+          <div class="card-title">
+            <a class="node " id="91"><span><h6 style="color: black";>Curl command for api : MemberUNMAuthLoginPOST</h6></span></a>
+            <div class="node-attr">
+            </div>
+          </div>
+        </div>
+        <div class="collapse">
+          <div class="card-body">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>10:05:35 AM</td>
+        <td>
+          <br>curl --location --request POST 'https://sandbox.eph.bliblitiket.tools/gks-unm-go-be/api/v1/auth/login'  --header 'X-Country-Code:ID'  --header 'Cookie:device_id=53401112-03e1-461d-8143-4d60d76d1262-dont-change; Path=/; Domain=staging.bliblitiket.com; HttpOnly; Secure'  --header 'X-Client-Id:9dc79e3916a042abc86c2aa525bff009'  --header 'Accept:*/*'  --header 'X-City:ID'  --header 'Content-Type:application/json'  --data-raw '{&quot;ref&quot;:&quot;https://preprod.tiket.com&quot;,&quot;identity&quot;:&quot;muhammad.yazid@tiket.com&quot;,&quot;secret&quot;:&quot;TestTiket@123&quot;,&quot;type&quot;:&quot;EMAIL_PASSWORD&quot;}'
+        </td>
+      </tr>
+  </tbody>
+</table>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-toolbar node-info">
+            <ul class="list-inline d-none d-sm-block">
+              <li><span class="badge pass-bg log ">Pass</span></li>
+              <li><span class='badge badge-default'>00:00:002</span></li>
+              <li></li>
+            </ul>
+          </div>
+          <div class="card-title">
+            <a class="node " id="104"><span><h6 style="color: black";>Curl command for api : MemberUNMAuthCodeVerifyGET</h6></span></a>
+            <div class="node-attr">
+            </div>
+          </div>
+        </div>
+        <div class="collapse">
+          <div class="card-body">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>10:05:35 AM</td>
+        <td>
+          <br>curl --location --request GET 'https://sandbox.eph.bliblitiket.tools/gks-unm-go-be/api/v1/auth/code/verify?authCode=eyJhbGciOiJFZERTQSIsImtpZCI6ImxjX0YtVzBKLXc4IiwidHlwIjoiSldUIn0.eyJfdGNzIjoibm9uZSIsIl90cnMiOiJub25lIiwiY29va2llRG9tYWluIjoiLnRpa2V0LmNvbSIsImVudGl0eSI6IlRJS0VUIiwiZXhwIjoxNzUzMTU3MTM0LCJpYXQiOjE3NTMxNTM1MzQsImlzcyI6Imh0dHBzOi8vc2FuZGJveC5ibGlibGl0aWtldC5jb20iLCJqdGkiOiJqZnltQ3NPWlo2b0kyLWx2ZE9kT0pwd1ZHdlU4WnBqViIsIm5iZiI6MTc1MzE1MzUzNCwibmV4dFJlZGlyZWN0cyI6WyJodHRwczovL3d3d3ByZXByb2QuZ2RuLWFwcC5jb20vdW5tL2FwaS9zc28tbG9naW4iXSwicmVmIjoiaHR0cHM6Ly9wcmVwcm9kLnRpa2V0LmNvbSIsInNlc3Npb25JZCI6ImpmeW1Dc09aWjZvSTItbHZkT2RPSnB3Vkd2VThacGpWIiwic3ViIjoiMTAwMDg0NDczIiwidG9waWMiOiIiLCJ1c2VySWQiOjEwMDA4NDQ3M30.EF3vVEppzuIMmrYssuShIAv1yaUX1EzwAHGjxB7XNqOtsu6IGEwkwwL8m1OdWok2Lr2iW5sF5M41N4YHG9WgBw'  --header 'Accept:*/*'  --header 'Accept-Language:'  --header 'Content-Type:application/json'
+        </td>
+      </tr>
+  </tbody>
+</table>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-toolbar node-info">
+            <ul class="list-inline d-none d-sm-block">
+              <li><span class="badge pass-bg log ">Pass</span></li>
+              <li><span class='badge badge-default'>00:00:003</span></li>
+              <li></li>
+            </ul>
+          </div>
+          <div class="card-title">
+            <a class="node " id="122"><span><h6 style="color: black";>Curl command for api : MemberV3AuthUNMServiceTiketPOST</h6></span></a>
+            <div class="node-attr">
+            </div>
+          </div>
+        </div>
+        <div class="collapse">
+          <div class="card-body">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>10:05:35 AM</td>
+        <td>
+          <br>curl --location --request POST 'https://member-core-v2-be-svc.preprod-platform-cluster.tiket.com/tix-member-core/v3/auth/unm/service-ticket'  --header 'X-Username:muhammad.yazid@tiket.com'  --header 'Accept:*/*'  --header 'X-Channel-Id:DESKTOP'  --header 'X-Store-Id:username'  --header 'Accept-Language:en'  --header 'Content-Type:application/json'  --header 'X-Service-Id:gateway'  --data-raw '{&quot;serviceTicket&quot;:&quot;eyJhbGciOiJIUzI1NiIsImtpZCI6IkoydjNvdzloV2VzIiwidHlwIjoiSldUIn0.eyJfdGNzIjoibm9uZSIsIl90cnMiOiJrdiIsImVudGl0eSI6IlRJS0VUIiwiZXhwIjoxNzUzMTU3MTM1LCJpYXQiOjE3NTMxNTM1MzUsImlzcyI6Imh0dHBzOi8vc2FuZGJveC5ibGlibGl0aWtldC5jb20iLCJqdGkiOiI1NDA0MTU0Ny02MjY2LTQ0ZGItYWNhYy02M2EzYWM1NmVjNDgiLCJuYmYiOjE3NTMxNTM1MzUsInNlc3Npb25JZCI6ImpmeW1Dc09aWjZvSTItbHZkT2RPSnB3Vkd2VThacGpWIiwic3ViIjoiMTAwMDg0NDczIiwidG9waWMiOiJTRVJWSUNFX1RJQ0tFVCIsInVzZXJJZCI6MTAwMDg0NDczfQ.43ACXc2g1QzI3Vkl5REp6hymGWYqp3ie9FGAFuCc7OE&quot;}'
+        </td>
+      </tr>
+  </tbody>
+</table>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-toolbar node-info">
+            <ul class="list-inline d-none d-sm-block">
+              <li><span class="badge pass-bg log ">Pass</span></li>
+              <li><span class='badge badge-default'>00:00:002</span></li>
+              <li></li>
+            </ul>
+          </div>
+          <div class="card-title">
+            <a class="node " id="741"><span><h6 style="color: black";>Curl command for api : YourActiveOrderGET</h6></span></a>
+            <div class="node-attr">
+            </div>
+          </div>
+        </div>
+        <div class="collapse">
+          <div class="card-body">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>10:06:05 AM</td>
+        <td>
+          <br>curl --location --request GET 'https://preprod.tiket.com/ms-gateway/tix-order-composer/yourorder/v1/activeorderlist'  --header 'Accept:*/*'  --header 'User-Agent:tiketcom/ios-version (twh:20420882) - v4.68.0'  --header 'currency:idr'  --header 'accessToken:eyJraWQiOiJ5NUFfSmJKNzFDNVpsbjBCbU11blJRTG5XV210ZG5OQSJ9.eyJhdWQiOiJ0aWtldC5jb20iLCJzdWIiOiI2ODdlZmZmZmYyNjI3YjI2YTNiMmQ4NzIiLCJhY2NvdW50aWQiOjE3NTc0LCJzdHQiOjAsIm5iZiI6MTc1MzE1MzUzNSwiaXNzIjoiaHR0cHM6Ly93d3cudGlrZXQuY29tIiwiZXhwIjoxNzU0MzYzMTM0LCJlbWFpbCI6Im11aGFtbWFkLnlhemlkQHRpa2V0LmNvbSJ9.79CjZz-0PxE0yHcQaOJIt3FOaKlpikjp_abjmbhVJ0hG5O3Q6uFDTiouF00yNxzx'  --header 'lang:en'  --header 'Content-Type:application/json'
+        </td>
+      </tr>
+  </tbody>
+</table>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-toolbar node-info">
+            <ul class="list-inline d-none d-sm-block">
+              <li><span class="badge warning-bg log ">Warning</span></li>
+              <li><span class='badge badge-default'>00:00:002</span></li>
+              <li></li>
+            </ul>
+          </div>
+          <div class="card-title">
+            <a class="node " id="742"><span><h4 style="color: red";>Exception stack trace</h4></span></a>
+            <div class="node-attr">
+            </div>
+          </div>
+        </div>
+        <div class="collapse">
+          <div class="card-body">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log warning-bg">Warning</span></td>
+        <td>10:06:05 AM</td>
+        <td>
+          <textarea readonly class="code-block">core.exception.TestDataIssueSkipException: Skip Exception due to test data issue
+	at core.exception.ApiTestException.skipTestException(ApiTestException.java:17)
+	at core.support.AbstractApi.checkExpectResponseStatus(AbstractApi.java:443)
+	at core.support.AbstractApi.callAPI(AbstractApi.java:401)
+	at core.support.AbstractApiV2.callAPI(AbstractApiV2.java:152)
+	at core.support.AbstractApiV2.callAPI(AbstractApiV2.java:147)
+	at tiket.por.order.api.YourActiveOrderGET.callYourActiveOrderApi(YourActiveOrderGET.java:82)
+	at tiket.por.CommonPORUtilities.getActiveOrderData(CommonPORUtilities.java:127)
+	at tiket.accommodation.api.HotelViewAndDownloadVoucherPOST.getPrerequisiteData(HotelViewAndDownloadVoucherPOST.java:83)
+	at tiket.accommodation.HotelDownloadApiTest.testHotelDownloadVoucher(HotelDownloadApiTest.java:33)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+	at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:677)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:221)
+	at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+	at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:962)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:194)
+	at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+	at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+</textarea>
+          
+        </td>
+      </tr>
+  </tbody>
+</table>
+          </div>
+        </div>
+      </div>
+  </div>
+      </div>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+=== Enhanced RAG System Test ===
+Timestamp: 2025-07-12T23:25:15.686Z
+User Query: what do I do if I raise a defect but the issue is already in production?
+
+=== Process Steps ===
+✅ Generating multiple CQL search strategies - Generated 6 search strategies
+✅ Searching Confluence (top 3 strategies) - Found 5 pages
+✅ Ranking pages by relevance using LLM - Ranked 5 pages
+✅ Selecting top 3 most relevant pages - Selected 3 pages with content
+✅ Generating enhanced response - Generated response from 3 sources
+
+=== Search Results ===
+Found 5 total pages
+Used 3 pages
+Token usage: 1125/400
+
+=== Source Documents ===
+1. SOP: Monitoring defects & production issues (Tech Directorate) - Relevance: 9/10
+   URL: https://borobudur.atlassian.net/wiki/spaces/TD/pages/3405447932/SOP+Monitoring+defects+production+issues
+2. SOP: Defects/Bugs Process (Tech Directorate) - Relevance: 8/10
+   URL: https://borobudur.atlassian.net/wiki/spaces/TD/pages/2759491586/SOP+Defects+Bugs+Process
+3. How To Handle Basic Bug (Software Quality Assurance) - Relevance: 7/10
+   URL: https://borobudur.atlassian.net/wiki/spaces/SQA/pages/411041931/How+To+Handle+Basic+Bug
+
+=== Generated Response ===
+If you raise a defect and discover the issue also exists in production, you should follow these steps:
+
+**Direct Answer:** Report the issue as a "Bug" with the environment set to "Production."  This differs from a "Defect," which is linked to a specific sprint story.
+
+**Step-by-Step Procedure:**
+
+1. **Identify the Issue Type:** Determine if the issue is related to a specific sprint story.  If it is *not* related to a sprint story, it should be reported as a "Bug." If it *is* related, it should be reported as a "Defect." **[SOP: Defects/Bugs Process]**
+
+2. **Report the Issue:** Create a Jira ticket.  
+
+    *   If the issue is *not* related to a sprint story, the Jira ticket type should be "Bug" with the "Environment" field set to "Production." **[SOP: Defects/Bugs Process]**
+    *   If the issue *is* related to a sprint story, the Jira ticket type should be "Defect," and should be associated with the relevant sprint story. **[SOP: Defects/Bugs Process]**
+
+3. **Additional Considerations:**  Ensure that all necessary information, such as steps to reproduce, screenshots, and affected users are included in the Jira report.  This aids in efficient resolution of the issue. **[SOP: Defects/Bugs Process]**
+
+
+**Important Notes:**
+
+*   The distinction between "Defect" and "Bug" is crucial for accurate tracking and resolution.  A "Defect" is a child Jira issue and is linked to a parent story. A "Bug" can be created independently. **[SOP: Defects/Bugs Process]**
+*   The "Ninja Core Production Issues" filter can be used to monitor production issues.  These are discussed and prioritized every three weeks during pre-grooming. **[SOP: Monitoring defects & production issues]**
+
+**Related Processes:**
+
+* The "Ninja Core Defects" filter tracks defects within the QA cycle and is reviewed every three weeks before the end of the sprint. **[SOP: Monitoring defects & production issues]**
+* Regular monitoring and reporting are key to reducing production issues and improving software quality.  
+
+**Sources:**
+
+* SOP: Monitoring defects & production issues
+* SOP: Defects/Bugs Process
+* How To Handle Basic Bug
+
+
+
+=== System Performance ===
+Multi-source retrieval: SUCCESS
+Relevance ranking: ACTIVE
+Token management: EXCEEDED
+
+=== End of Test ===

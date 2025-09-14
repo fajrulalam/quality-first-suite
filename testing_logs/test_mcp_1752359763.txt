@@ -1,0 +1,56 @@
+=== RAG Testing Log ===
+Timestamp: 2025-07-12T22:36:03.634Z
+User Query: Find me information about defect processes and how to handle bugs in our system
+Generated CQL: title ~ "SOP" AND (title ~ "defect" OR title ~ "bug")
+
+=== Search Results ===
+{
+  "results": [
+    {
+      "id": "3405447932",
+      "type": "page",
+      "status": "current",
+      "title": "SOP: Monitoring defects & production issues",
+      "childTypes": {},
+      "macroRenderedOutput": {},
+      "restrictions": {},
+      "_expandable": {
+        "container": "",
+        "metadata": "",
+        "extensions": "",
+        "operations": "",
+        "children": "",
+        "history": "/rest/api/content/3405447932/history",
+        "ancestors": "",
+        "body": "",
+        "version": "",
+        "descendants": "",
+        "space": "/rest/api/space/TD"
+      },
+      "_links": {
+        "webui": "/spaces/TD/pages/3405447932/SOP+Monitoring+defects+production+issues",
+        "self": "https://borobudur.atlassian.net/wiki/rest/api/content/3405447932",
+        "tinyui": "/x/-AL7yg"
+      }
+    }
+  ],
+  "start": 0,
+  "limit": 1,
+  "size": 1,
+  "_links": {
+    "base": "https://borobudur.atlassian.net/wiki",
+    "context": "/wiki",
+    "next": "/rest/api/content/search?next=true&cursor=_f_MQ%3D%3D_sa_WyJcdDM0MDU0NDc5MzIgOTMvQnRDQGFualAmbCM4R0IxQWEgY3AiXQ%3D%3D&limit=1&start=1&cql=title+~+%22SOP%22+AND+(title+~+%22defect%22+OR+title+~+%22bug%22)",
+    "self": "https://borobudur.atlassian.net/wiki/rest/api/content/search?cql=title+~+%22SOP%22+AND+(title+~+%22defect%22+OR+title+~+%22bug%22)"
+  }
+}
+
+=== Selected Page ===
+Title: SOP: Monitoring defects & production issues
+Page ID: 3405447932
+URL: https://borobudur.atlassian.net/wiki/spaces/TD/pages/3405447932/SOP+Monitoring+defects+production+issues
+
+=== Fetching Page Content ===
+
+
+=== Test Timed Out ===

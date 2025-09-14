@@ -1,0 +1,19 @@
+=== Complete RAG Pipeline Test ===
+Timestamp: 2025-07-12T22:47:29.419Z
+User Query: Find me information about defect processes and how to handle bugs in our system
+Generated CQL: title ~ "SOP" AND (title ~ "defect" OR title ~ "bug")
+
+=== Step 1: Confluence Retrieval ===
+Found 1 pages
+Selected: SOP: Monitoring defects & production issues
+
+=== Step 2: Gemini Generation ===
+Sending to Gemini model: gemini-1.5-flash
+Document: SOP: Monitoring defects & production issues
+
+=== Gemini Response ===
+The process for handling defects involves a three-pronged approach.  First, all defects are discussed before the end of each sprint in a meeting with Core team developers.  This review ensures the accuracy of defect information, including reason, classification, QA leakage, phase of discovery, resolution, and environment.  A Jira filter, "Ninja Core Defects," is used for monitoring. [SOP: Monitoring defects & production issues]  Second, production issues are discussed and planned every three weeks during pre-grooming sessions, prioritizing tickets for the upcoming sprint using the "Ninja Core Production Issues" filter. [SOP: Monitoring defects & production issues]  Finally, Jira is integrated with Slack to provide timely notifications of new defects or bugs, ensuring developer awareness, team visibility, and identification of misdirected Jira creation. [SOP: Monitoring defects & production issues]
+</answer>
+
+
+=== End of RAG Pipeline ===

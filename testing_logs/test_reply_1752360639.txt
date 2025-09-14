@@ -1,0 +1,18 @@
+=== Complete RAG Pipeline Test ===
+Timestamp: 2025-07-12T22:50:39.561Z
+User Query: Explain to me what is a master tag in hotel SRP cards
+Generated CQL: title ~ "SOP" AND (title ~ "defect" OR title ~ "bug")
+
+=== Step 1: Confluence Retrieval ===
+Found 1 pages
+Selected: SOP: Monitoring defects & production issues
+
+=== Step 2: Gemini Generation ===
+Sending to Gemini model: gemini-1.5-flash
+Document: SOP: Monitoring defects & production issues
+
+=== Gemini Response ===
+I could not find the information in the knowledge base to answer your question.
+
+
+=== End of RAG Pipeline ===
