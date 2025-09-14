@@ -309,6 +309,12 @@ export default function Home() {
                 Create Test Data 🔄
               </Link>
               <Link
+                href="/api-test-cases"
+                className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200 shadow-md hover:shadow-lg"
+              >
+                API Test Cases 🔍
+              </Link>
+              <Link
                 href="/chatbot"
                 className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-[var(--tiket-yellow)] hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition-colors duration-200 shadow-md hover:shadow-lg"
               >
@@ -342,6 +348,53 @@ export default function Home() {
 
           {!showPreview && (
             <div className="space-y-8">
+              {/* Quick Actions Card */}
+              <section className="glass-card bg-gradient-to-r from-blue-50 to-green-50">
+                <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4 text-center">
+                  🚀 Quick Actions
+                </h2>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <Link
+                    href="/api-test-cases"
+                    className="flex items-center px-6 py-4 bg-green-600 hover:bg-green-700 text-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 group"
+                  >
+                    <svg className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <div className="font-semibold text-lg">API Auto Test Cases</div>
+                      <div className="text-green-100 text-sm">Generate systematic API test cases from Excel</div>
+                    </div>
+                  </Link>
+                  
+                  <Link
+                    href="/test-data"
+                    className="flex items-center px-6 py-4 bg-[var(--tiket-blue)] hover:bg-blue-700 text-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 group"
+                  >
+                    <svg className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <div>
+                      <div className="font-semibold text-lg">Create Test Data</div>
+                      <div className="text-blue-100 text-sm">Generate automated test data sequences</div>
+                    </div>
+                  </Link>
+                  
+                  <Link
+                    href="/chatbot"
+                    className="flex items-center px-6 py-4 bg-[var(--tiket-yellow)] hover:bg-yellow-400 text-gray-900 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 group"
+                  >
+                    <svg className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    <div>
+                      <div className="font-semibold text-lg">AI Assistant</div>
+                      <div className="text-yellow-800 text-sm">Chat with intelligent SQA assistant</div>
+                    </div>
+                  </Link>
+                </div>
+              </section>
+
               {/* Analysis Mode Selection Card */}
               <section
                 aria-labelledby="analysis-mode-title"
