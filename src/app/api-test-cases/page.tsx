@@ -250,7 +250,7 @@ export default function ApiTestCasesPage() {
                 API Auto Test Cases Generator
               </h1>
               <p className="mt-2 text-gray-600">
-                Upload an Excel file with cURL commands and systematically test field variations
+                Upload an Excel file with cURL commands and systematically test field variations.
               </p>
             </div>
             <Link 
