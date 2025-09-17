@@ -130,8 +130,143 @@ export default function ApiTestCasesPage() {
     return result;
   }, []);
 
+  // Check if local VPN bridge is available
+  const checkLocalBridge = useCallback(async (port: number = 3001): Promise<boolean> => {
+    try {
+      const response = await fetch(`http://localhost:${port}/health`, {
+        method: 'GET',
+        mode: 'cors',
+        signal: AbortSignal.timeout(2000) // 2 second timeout
+      });
+      return response.ok;
+    } catch {
+      return false;
+    }
+  }, []);
+
   const executeCurlInNewTab = useCallback(async (curlCommand: string) => {
     try {
+      // First, try to use local VPN bridge if available
+      const bridgeAvailable = await checkLocalBridge();
+      
+      if (bridgeAvailable) {
+        console.log('🔗 Using local VPN bridge server');
+        
+        // Execute via local bridge (which has VPN access)
+        const bridgeResponse = await fetch('http://localhost:3001/execute-curl', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ curlCommand }),
+          mode: 'cors'
+        });
+
+        if (!bridgeResponse.ok) {
+          throw new Error(`Bridge server error: ${bridgeResponse.status}`);
+        }
+
+        const bridgeResult = await bridgeResponse.json();
+        
+        if (!bridgeResult.success) {
+          throw new Error(bridgeResult.error || 'Bridge execution failed');
+        }
+
+        // Parse response for better formatting
+        let responseData = bridgeResult.response;
+        if (bridgeResult.isJson) {
+          try {
+            const jsonData = JSON.parse(bridgeResult.response);
+            responseData = JSON.stringify(jsonData, null, 2);
+          } catch {
+            // Keep as-is if parsing fails
+          }
+        }
+
+        // Generate HTML for successful bridge response
+        const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Response - VPN Bridge</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; background: #f8f9fa; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden; }
+        .header { background: #10b981; color: white; padding: 20px; }
+        .status { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+        .bridge-info { background: #059669; padding: 10px; border-radius: 4px; margin-top: 10px; font-size: 14px; }
+        .url { font-family: 'Courier New', monospace; opacity: 0.9; word-break: break-all; }
+        .section { padding: 20px; border-bottom: 1px solid #e5e7eb; }
+        .section:last-child { border-bottom: none; }
+        .section-title { font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #374151; }
+        .code-block { background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 6px; padding: 15px; font-family: 'Courier New', monospace; font-size: 14px; overflow-x: auto; white-space: pre-wrap; }
+        .response-data { background: #1f2937; color: #f9fafb; border-radius: 6px; padding: 20px; font-family: 'Courier New', monospace; font-size: 14px; overflow-x: auto; white-space: pre-wrap; line-height: 1.5; }
+        .copy-btn { background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px; margin-top: 10px; }
+        .copy-btn:hover { background: #2563eb; }
+        .execution-info { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; padding: 12px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="status">✅ SUCCESS - Executed via VPN Bridge</div>
+            <div class="bridge-info">🔗 Request executed through your local computer with VPN access</div>
+        </div>
+        
+        <div class="section">
+            <div class="execution-info">
+                <strong>📊 Execution Details:</strong><br>
+                • Execution time: ${bridgeResult.executionTime}ms<br>
+                • Method: Local VPN Bridge Server<br>
+                • Timestamp: ${bridgeResult.timestamp}
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">cURL Command</div>
+            <div class="code-block">${curlCommand}</div>
+            <button class="copy-btn" onclick="copyToClipboard(\`${curlCommand.replace(/`/g, '\\`')}\`)">Copy cURL</button>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Response Body</div>
+            <div class="response-data">${responseData}</div>
+            <button class="copy-btn" onclick="copyToClipboard(\`${responseData.replace(/`/g, '\\`')}\`)">Copy Response</button>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                event.target.textContent = 'Copied!';
+                setTimeout(() => {
+                    event.target.textContent = event.target.textContent.includes('cURL') ? 'Copy cURL' : 'Copy Response';
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Could not copy text: ', err);
+                alert('Failed to copy to clipboard');
+            });
+        }
+    </script>
+</body>
+</html>`;
+
+        // Open in new tab
+        const newWindow = window.open('', '_blank');
+        if (newWindow) {
+          newWindow.document.write(html);
+          newWindow.document.close();
+        } else {
+          toast.error('Failed to open new tab. Please allow popups for this site.');
+        }
+        return;
+      }
+
+      // Fallback: Direct browser execution (for localhost development)
+      console.log('🔄 Local bridge not available, trying direct browser execution');
+      
       // Parse the cURL command
       const parsed = parseCurl(curlCommand);
       
@@ -140,15 +275,15 @@ export default function ApiTestCasesPage() {
         return;
       }
 
-      // Execute the request directly from the browser (with VPN access)
+      // Execute the request directly from the browser
       const requestOptions: RequestInit = {
         method: parsed.method,
         headers: {
           ...parsed.headers,
           'Accept': parsed.headers['Accept'] || parsed.headers['accept'] || 'application/json, text/plain, */*'
         },
-        mode: 'cors', // Allow CORS
-        credentials: 'omit' // Don't send credentials
+        mode: 'cors',
+        credentials: 'omit'
       };
 
       // Add body for POST/PUT/PATCH
@@ -266,7 +401,7 @@ export default function ApiTestCasesPage() {
       console.error('Failed to execute cURL:', error);
       toast.error(`Failed to execute cURL: ${error instanceof Error ? error.message : 'Network error - make sure you have VPN access if needed'}`);
     }
-  }, [parseCurl]);
+  }, [parseCurl, checkLocalBridge]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];

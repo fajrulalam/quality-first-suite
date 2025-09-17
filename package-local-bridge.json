@@ -1,0 +1,17 @@
+{
+  "name": "vpn-bridge-server",
+  "version": "1.0.0",
+  "description": "Local VPN Bridge Server for API Test Cases",
+  "main": "local-bridge-server.js",
+  "scripts": {
+    "start": "node local-bridge-server.js",
+    "dev": "node local-bridge-server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "keywords": ["vpn", "bridge", "api", "testing"],
+  "author": "API Test Cases Generator",
+  "license": "MIT"
+}
