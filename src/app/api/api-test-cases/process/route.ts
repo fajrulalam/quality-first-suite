@@ -16,7 +16,7 @@ export async function OPTIONS() {
 
 interface FieldWithValues {
   fieldName: string;
-  customValues: string[];
+  customValues: (string | number | boolean | null | undefined)[];
 }
 
 interface CurlData {
@@ -42,6 +42,81 @@ interface TestResult {
   responseCode?: string;
   responseMessage?: string;
   curlCommand?: string;
+  errors?: string;
+}
+
+// Smart formatter for test case display
+function formatTestCaseValue(value: unknown): string {
+  if (typeof value === 'string') {
+    return `"${value}"`;
+  }
+  return String(value); // Numbers, booleans, etc. without quotes
+}
+
+// Extract errors from response
+function extractErrors(responseData: string): string {
+  try {
+    const parsed = JSON.parse(responseData);
+    
+    // Check for common error fields
+    if (parsed.errors) {
+      if (Array.isArray(parsed.errors)) {
+        return parsed.errors.map((err: unknown) => typeof err === 'string' ? err : JSON.stringify(err)).join('; ');
+      } else if (typeof parsed.errors === 'string') {
+        return parsed.errors;
+      } else {
+        return JSON.stringify(parsed.errors);
+      }
+    }
+    
+    // Check for error field (singular)
+    if (parsed.error) {
+      return typeof parsed.error === 'string' ? parsed.error : JSON.stringify(parsed.error);
+    }
+    
+    // Check for message field that might contain errors
+    if (parsed.message && (parsed.success === false || parsed.status === 'error')) {
+      return parsed.message;
+    }
+    
+    return '';
+  } catch {
+    // If response isn't JSON, return empty string
+    return '';
+  }
+}
+
+// Intelligently parse values based on quotes and content
+function parseIntelligentValue(value: string, wasQuoted: boolean): string | number | boolean | null | undefined {
+  // If it was quoted, treat as string regardless of content
+  if (wasQuoted) {
+    return value;
+  }
+  
+  // If not quoted, try to parse as appropriate type
+  const trimmed = value.trim();
+  
+  // Boolean values
+  if (trimmed === 'true') return true;
+  if (trimmed === 'false') return false;
+  
+  // null/undefined
+  if (trimmed === 'null') return null;
+  if (trimmed === 'undefined') return undefined;
+  
+  // Numbers
+  // Check for integer
+  if (/^-?\d+$/.test(trimmed)) {
+    return parseInt(trimmed, 10);
+  }
+  
+  // Check for float/double
+  if (/^-?\d*\.\d+$/.test(trimmed)) {
+    return parseFloat(trimmed);
+  }
+  
+  // If none of the above, treat as string
+  return trimmed;
 }
 
 // Parse complex field string: searchType("CITY","REGION"),adult(1,2,10),simple
@@ -67,7 +142,7 @@ function parseComplexFieldString(fieldsStr: string): FieldWithValues[] {
     const fieldName = trimmed.substring(fieldStart, i).trim();
     if (!fieldName) continue;
     
-    const customValues: string[] = [];
+    const customValues: (string | number | boolean | null | undefined)[] = [];
     
     // Check if this field has custom values in parentheses
     if (i < trimmed.length && trimmed[i] === '(') {
@@ -84,8 +159,10 @@ function parseComplexFieldString(fieldsStr: string): FieldWithValues[] {
         
         // Parse value - could be quoted or unquoted
         let value = '';
+        let wasQuoted = false;
         if (trimmed[i] === '"') {
           // Quoted value
+          wasQuoted = true;
           i++; // Skip opening quote
           const valueStart = i;
           while (i < trimmed.length && trimmed[i] !== '"') {
@@ -103,7 +180,8 @@ function parseComplexFieldString(fieldsStr: string): FieldWithValues[] {
         }
         
         if (value) {
-          customValues.push(value);
+          // Intelligently parse the value based on quotes and content
+          customValues.push(parseIntelligentValue(value, wasQuoted));
         }
       }
       
@@ -169,7 +247,7 @@ function parseExcelFile(buffer: Buffer): CurlData[] {
         curlDataArray.push({ apiName, curl, fieldsToTest });
         console.log(`Added cURL data for row ${i}: ${fieldsToTest.length} fields to test`);
         fieldsToTest.forEach(field => {
-          console.log(`  - Field: ${field.fieldName}, Custom values: [${field.customValues.join(', ')}]`);
+          console.log(`  - Field: ${field.fieldName}, Custom values: [${field.customValues.map(v => String(v)).join(', ')}]`);
         });
       } else {
         console.log(`Skipping row ${i}: empty cURL`);
@@ -487,7 +565,9 @@ async function executeRequest(curlCommand: string, useProxy: boolean = true): Pr
           hasBody: !!parsed.body
         });
 
-        const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'https://quality-first-suite.vercel.app' || 'http://localhost:3000';
+        // Check if we're running locally (development) vs on Vercel (production)
+        const isLocal = !process.env.VERCEL && !process.env.NEXTAUTH_URL;
+        const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || (isLocal ? 'http://localhost:3000' : 'https://quality-first-suite.vercel.app');
         const proxyResponse = await fetch(`${baseUrl}/api/api-test-cases/proxy`, {
           method: 'POST',
           headers: {
@@ -504,6 +584,10 @@ async function executeRequest(curlCommand: string, useProxy: boolean = true): Pr
         const proxyResult = await proxyResponse.json();
         
         if (proxyResult.error) {
+          // Check if it's a network connectivity issue
+          if (proxyResult.error.includes('Unable to reach') || proxyResult.error.includes('ECONNREFUSED') || proxyResult.error.includes('ENOTFOUND')) {
+            throw new Error(`Network error: The API endpoint "${url}" is not accessible. This might be an internal/test environment that requires VPN access or IP whitelisting.`);
+          }
           throw new Error(`Proxy error: ${proxyResult.error}`);
         }
         
@@ -750,7 +834,7 @@ export async function POST(request: NextRequest) {
               // Better test case naming for custom values
               let testCaseName = `${testCase.type} ${field.fieldName}`;
               if (testCase.type.startsWith('Custom')) {
-                testCaseName = `${field.fieldName}="${testCase.value}"`;
+                testCaseName = `${field.fieldName}=${formatTestCaseValue(testCase.value)}`;
               }
               
               const testResult: TestResult = {
@@ -761,7 +845,8 @@ export async function POST(request: NextRequest) {
                 httpStatus: result.httpStatus,
                 responseCode: result.responseCode,
                 responseMessage: result.responseMessage,
-                curlCommand: modifiedCurl
+                curlCommand: modifiedCurl,
+                errors: extractErrors(formattedResponse)
               };
 
               controller.enqueue(encoder.encode(JSON.stringify({

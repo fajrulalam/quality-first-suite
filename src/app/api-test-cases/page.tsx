@@ -13,6 +13,7 @@ interface TestResult {
   responseCode?: string;
   responseMessage?: string;
   curlCommand?: string;
+  errors?: string;
 }
 
 interface ProcessingStats {
@@ -44,6 +45,34 @@ export default function ApiTestCasesPage() {
     } catch (error) {
       console.error('Failed to copy cURL:', error);
       toast.error('Failed to copy cURL to clipboard');
+    }
+  }, []);
+
+  const executeCurlInNewTab = useCallback(async (curlCommand: string) => {
+    try {
+      // Make request to our execution endpoint
+      const response = await fetch('/api/curl-execute', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ curlCommand }),
+      });
+
+      // Get the HTML response
+      const htmlContent = await response.text();
+
+      // Create a new window/tab and write the HTML content
+      const newWindow = window.open('', '_blank');
+      if (newWindow) {
+        newWindow.document.write(htmlContent);
+        newWindow.document.close();
+      } else {
+        toast.error('Failed to open new tab. Please allow popups for this site.');
+      }
+    } catch (error) {
+      console.error('Failed to execute cURL:', error);
+      toast.error('Failed to execute cURL command');
     }
   }, []);
 
@@ -490,6 +519,12 @@ export default function ApiTestCasesPage() {
                             Response
                           </th>
                           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Errors
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Hit this curl
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Actions
                           </th>
                         </tr>
@@ -535,6 +570,34 @@ export default function ApiTestCasesPage() {
                                   {result.response}
                                 </div>
                               </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="text-sm text-gray-900 max-w-xs">
+                                {result.errors ? (
+                                  <div 
+                                    className="truncate cursor-help text-red-600" 
+                                    title={result.errors}
+                                  >
+                                    {result.errors}
+                                  </div>
+                                ) : (
+                                  <span className="text-gray-400">No errors</span>
+                                )}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              {result.curlCommand && (
+                                <button
+                                  onClick={() => executeCurlInNewTab(result.curlCommand!)}
+                                  className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
+                                  title="Execute cURL and view formatted response in new tab"
+                                >
+                                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-2M7 7l10 10M17 7v4M17 7h-4" />
+                                  </svg>
+                                  Execute
+                                </button>
+                              )}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               {result.curlCommand && (

@@ -50,7 +50,12 @@ export async function POST(request: NextRequest) {
 
     console.log(`\n🌐 PROXY REQUEST: ${method} ${url}`);
     console.log('Clean headers:', Object.keys(cleanHeaders));
+    console.log('Full headers:', cleanHeaders);
     console.log('Request body present:', !!body);
+    if (body) {
+      console.log('Request body type:', typeof body);
+      console.log('Request body (first 200 chars):', JSON.stringify(body).substring(0, 200));
+    }
     
     // Log the equivalent cURL command for debugging
     let curlEquivalent = `curl -X ${method.toUpperCase()}`;
@@ -74,7 +79,11 @@ export async function POST(request: NextRequest) {
       method: method.toUpperCase(),
       headers: cleanHeaders,
       // Add timeout of 30 seconds for proxy requests
-      signal: AbortSignal.timeout(30000)
+      signal: AbortSignal.timeout(30000),
+      // Add these options to match browser behavior
+      redirect: 'follow',
+      // @ts-expect-error - Node.js specific options
+      agent: false // Disable connection pooling that might cause issues
     };
 
     // Add body for POST/PUT/PATCH requests
