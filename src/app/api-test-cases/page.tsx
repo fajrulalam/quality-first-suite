@@ -48,33 +48,225 @@ export default function ApiTestCasesPage() {
     }
   }, []);
 
+  // Parse cURL command to extract components (copied from server logic)
+  const parseCurl = useCallback((curlCommand: string) => {
+    const result = {
+      method: 'GET',
+      url: '',
+      headers: {} as Record<string, string>,
+      body: null as any
+    };
+
+    // Clean up the command
+    const cmd = curlCommand
+      .replace(/\\\s*\n\s*/g, ' ') // Remove line continuations
+      .replace(/\s+/g, ' ') // Normalize whitespace
+      .replace(/^curl\s+/i, '') // Remove curl command
+      .trim();
+
+    // Extract method
+    const methodMatch = cmd.match(/--request\s+(\w+)|--method\s+(\w+)|-X\s+(\w+)/i);
+    if (methodMatch) {
+      result.method = (methodMatch[1] || methodMatch[2] || methodMatch[3]).toUpperCase();
+    }
+
+    // Extract URL
+    const urlPatterns = [
+      /'([^']*https?:\/\/[^']*)'/,
+      /"([^"]*https?:\/\/[^"]*)"/,
+      /--url[=\s]+'([^']*)'/,
+      /--url[=\s]+"([^"]*)"/,
+      /--url[=\s]+([^\s]+)/,
+      /(\bhttps?:\/\/[^\s'"]+)/
+    ];
+
+    for (const pattern of urlPatterns) {
+      const match = cmd.match(pattern);
+      if (match && match[1]) {
+        result.url = match[1];
+        break;
+      }
+    }
+
+    // Extract headers
+    const headerMatches = cmd.matchAll(/(?:-H|--header)\s+(?:'([^']*)'|"([^"]*)"|([^\s]+))/g);
+    for (const match of headerMatches) {
+      const headerValue = match[1] || match[2] || match[3];
+      if (headerValue) {
+        const colonIndex = headerValue.indexOf(':');
+        if (colonIndex > 0) {
+          const key = headerValue.substring(0, colonIndex).trim();
+          const value = headerValue.substring(colonIndex + 1).trim();
+          result.headers[key] = value;
+        }
+      }
+    }
+
+    // Extract body/data
+    const dataPatterns = [
+      /(?:-d|--data|--data-raw)\s+'([^']*)'/,
+      /(?:-d|--data|--data-raw)\s+"([^"]*)"/,
+      /(?:-d|--data|--data-raw)\s+([^\s-][^\s]*)/
+    ];
+
+    for (const pattern of dataPatterns) {
+      const match = cmd.match(pattern);
+      if (match) {
+        const data = match[1] || match[2] || match[3];
+        try {
+          result.body = JSON.parse(data);
+        } catch {
+          result.body = data;
+        }
+        break;
+      }
+    }
+
+    // If method wasn't set but we have data, assume POST
+    if (!methodMatch && result.body) {
+      result.method = 'POST';
+    }
+
+    return result;
+  }, []);
+
   const executeCurlInNewTab = useCallback(async (curlCommand: string) => {
     try {
-      // Make request to our execution endpoint
-      const response = await fetch('/api/curl-execute', {
-        method: 'POST',
+      // Parse the cURL command
+      const parsed = parseCurl(curlCommand);
+      
+      if (!parsed.url) {
+        toast.error('Failed to parse URL from cURL command');
+        return;
+      }
+
+      // Execute the request directly from the browser (with VPN access)
+      const requestOptions: RequestInit = {
+        method: parsed.method,
         headers: {
-          'Content-Type': 'application/json',
+          ...parsed.headers,
+          'Accept': parsed.headers['Accept'] || parsed.headers['accept'] || 'application/json, text/plain, */*'
         },
-        body: JSON.stringify({ curlCommand }),
-      });
+        mode: 'cors', // Allow CORS
+        credentials: 'omit' // Don't send credentials
+      };
 
-      // Get the HTML response
-      const htmlContent = await response.text();
+      // Add body for POST/PUT/PATCH
+      if (parsed.body && ['POST', 'PUT', 'PATCH'].includes(parsed.method)) {
+        if (typeof parsed.body === 'string') {
+          requestOptions.body = parsed.body;
+        } else {
+          requestOptions.body = JSON.stringify(parsed.body);
+          if (!parsed.headers['Content-Type'] && !parsed.headers['content-type']) {
+            (requestOptions.headers as Record<string, string>)['Content-Type'] = 'application/json';
+          }
+        }
+      }
 
-      // Create a new window/tab and write the HTML content
+      console.log('Executing direct request from browser:', parsed.method, parsed.url);
+      
+      // Make the request directly from the browser
+      const response = await fetch(parsed.url, requestOptions);
+      const responseText = await response.text();
+
+      // Parse response for additional info
+      let responseData = responseText;
+      try {
+        const jsonData = JSON.parse(responseText);
+        responseData = JSON.stringify(jsonData, null, 2);
+      } catch {
+        // Not JSON, use as-is
+      }
+
+      // Generate HTML for the new tab
+      const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Response - ${response.status}</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; background: #f8f9fa; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden; }
+        .header { background: ${response.status >= 200 && response.status < 300 ? '#10b981' : response.status >= 400 ? '#ef4444' : '#f59e0b'}; color: white; padding: 20px; }
+        .status { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+        .url { font-family: 'Courier New', monospace; opacity: 0.9; word-break: break-all; }
+        .section { padding: 20px; border-bottom: 1px solid #e5e7eb; }
+        .section:last-child { border-bottom: none; }
+        .section-title { font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #374151; }
+        .code-block { background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 6px; padding: 15px; font-family: 'Courier New', monospace; font-size: 14px; overflow-x: auto; white-space: pre-wrap; }
+        .response-data { background: #1f2937; color: #f9fafb; border-radius: 6px; padding: 20px; font-family: 'Courier New', monospace; font-size: 14px; overflow-x: auto; white-space: pre-wrap; line-height: 1.5; }
+        .copy-btn { background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px; margin-top: 10px; }
+        .copy-btn:hover { background: #2563eb; }
+        .headers-grid { display: grid; gap: 10px; }
+        .header-item { display: flex; padding: 8px 12px; background: #f9fafb; border-radius: 4px; border-left: 4px solid #3b82f6; }
+        .header-key { font-weight: 600; margin-right: 10px; color: #1f2937; min-width: 150px; }
+        .header-value { color: #6b7280; word-break: break-all; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="status">HTTP ${response.status} ${response.statusText}</div>
+            <div class="url">${parsed.url}</div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">cURL Command</div>
+            <div class="code-block">${curlCommand}</div>
+            <button class="copy-btn" onclick="copyToClipboard(\`${curlCommand.replace(/`/g, '\\`')}\`)">Copy cURL</button>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Response Headers</div>
+            <div class="headers-grid">
+                ${Array.from(response.headers.entries()).map(([key, value]) => 
+                  `<div class="header-item">
+                     <div class="header-key">${key}:</div>
+                     <div class="header-value">${value}</div>
+                   </div>`
+                ).join('')}
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Response Body</div>
+            <div class="response-data">${responseData}</div>
+            <button class="copy-btn" onclick="copyToClipboard(\`${responseData.replace(/`/g, '\\`')}\`)">Copy Response</button>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                event.target.textContent = 'Copied!';
+                setTimeout(() => {
+                    event.target.textContent = event.target.textContent.includes('cURL') ? 'Copy cURL' : 'Copy Response';
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Could not copy text: ', err);
+                alert('Failed to copy to clipboard');
+            });
+        }
+    </script>
+</body>
+</html>`;
+
+      // Open in new tab
       const newWindow = window.open('', '_blank');
       if (newWindow) {
-        newWindow.document.write(htmlContent);
+        newWindow.document.write(html);
         newWindow.document.close();
       } else {
         toast.error('Failed to open new tab. Please allow popups for this site.');
       }
+
     } catch (error) {
       console.error('Failed to execute cURL:', error);
-      toast.error('Failed to execute cURL command');
+      toast.error(`Failed to execute cURL: ${error instanceof Error ? error.message : 'Network error - make sure you have VPN access if needed'}`);
     }
-  }, []);
+  }, [parseCurl]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -250,7 +442,7 @@ export default function ApiTestCasesPage() {
                 API Auto Test Cases Generator
               </h1>
               <p className="mt-2 text-gray-600">
-                Upload an Excel file with cURL commands and systematically test field variations.
+                Upload an Excel file with cURL commands and systematically test field variations
               </p>
             </div>
             <Link 
