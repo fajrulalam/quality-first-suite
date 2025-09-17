@@ -5,8 +5,11 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+    "export": "next build && next export",
+    "build-static": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "npm run build-static && gh-pages -d out"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

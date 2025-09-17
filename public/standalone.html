@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test Cases Generator - Standalone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        .bg-gradient { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <div class="bg-gradient text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <h1 class="text-4xl font-bold flex items-center">
+                    <span class="bg-white/20 p-3 rounded-xl mr-4">🔍</span>
+                    API Test Cases Generator
+                </h1>
+                <p class="mt-2 text-white/90 text-lg">
+                    Upload Excel files and test API endpoints directly from your browser with VPN support
+                </p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Upload Section -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                <h2 class="text-2xl font-semibold mb-4">Upload Excel File</h2>
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                    <input 
+                        type="file" 
+                        id="fileInput" 
+                        accept=".xlsx,.xls" 
+                        class="hidden"
+                        onchange="handleFileUpload(event)"
+                    >
+                    <label for="fileInput" class="cursor-pointer">
+                        <div class="text-4xl mb-4">📄</div>
+                        <p class="text-lg font-medium text-gray-700">Click to upload Excel file</p>
+                        <p class="text-sm text-gray-500">Supports .xlsx and .xls files</p>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="resultsSection" class="hidden">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-2xl font-semibold mb-4">Test Results</h2>
+                    <div class="overflow-x-auto">
+                        <table id="resultsTable" class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">API Name</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Test Case</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parameters</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Response</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Errors</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Execute</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultsBody" class="bg-white divide-y divide-gray-200">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading -->
+            <div id="loadingSection" class="hidden text-center py-8">
+                <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                <p class="mt-4 text-gray-600">Processing Excel file...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Parse cURL command to extract components
+        function parseCurl(curlCommand) {
+            const result = {
+                method: 'GET',
+                url: '',
+                headers: {},
+                body: null
+            };
+
+            const cmd = curlCommand
+                .replace(/\\\s*\n\s*/g, ' ')
+                .replace(/\s+/g, ' ')
+                .replace(/^curl\s+/i, '')
+                .trim();
+
+            // Extract method
+            const methodMatch = cmd.match(/--request\s+(\w+)|--method\s+(\w+)|-X\s+(\w+)/i);
+            if (methodMatch) {
+                result.method = (methodMatch[1] || methodMatch[2] || methodMatch[3]).toUpperCase();
+            }
+
+            // Extract URL
+            const urlPatterns = [
+                /'([^']*https?:\/\/[^']*)'/,
+                /"([^"]*https?:\/\/[^"]*)"/,
+                /--url[=\s]+'([^']*)'/,
+                /--url[=\s]+"([^"]*)"/,
+                /--url[=\s]+([^\s]+)/,
+                /(\bhttps?:\/\/[^\s'"]+)/
+            ];
+
+            for (const pattern of urlPatterns) {
+                const match = cmd.match(pattern);
+                if (match && match[1]) {
+                    result.url = match[1];
+                    break;
+                }
+            }
+
+            // Extract headers
+            const headerMatches = cmd.matchAll(/(?:-H|--header)\s+(?:'([^']*)'|"([^"]*)"|([^\s]+))/g);
+            for (const match of headerMatches) {
+                const headerValue = match[1] || match[2] || match[3];
+                if (headerValue) {
+                    const colonIndex = headerValue.indexOf(':');
+                    if (colonIndex > 0) {
+                        const key = headerValue.substring(0, colonIndex).trim();
+                        const value = headerValue.substring(colonIndex + 1).trim();
+                        result.headers[key] = value;
+                    }
+                }
+            }
+
+            // Extract body/data
+            const dataPatterns = [
+                /(?:-d|--data|--data-raw)\s+'([^']*)'/,
+                /(?:-d|--data|--data-raw)\s+"([^"]*)"/,
+                /(?:-d|--data|--data-raw)\s+([^\s-][^\s]*)/
+            ];
+
+            for (const pattern of dataPatterns) {
+                const match = cmd.match(pattern);
+                if (match) {
+                    const data = match[1] || match[2] || match[3];
+                    try {
+                        result.body = JSON.parse(data);
+                    } catch {
+                        result.body = data;
+                    }
+                    break;
+                }
+            }
+
+            if (!methodMatch && result.body) {
+                result.method = 'POST';
+            }
+
+            return result;
+        }
+
+        // Execute cURL directly from browser
+        async function executeCurl(curlCommand) {
+            try {
+                const parsed = parseCurl(curlCommand);
+                
+                if (!parsed.url) {
+                    throw new Error('Failed to parse URL from cURL command');
+                }
+
+                const requestOptions = {
+                    method: parsed.method,
+                    headers: {
+                        ...parsed.headers,
+                        'Accept': parsed.headers['Accept'] || parsed.headers['accept'] || 'application/json, text/plain, */*'
+                    },
+                    mode: 'cors',
+                    credentials: 'omit'
+                };
+
+                if (parsed.body && ['POST', 'PUT', 'PATCH'].includes(parsed.method)) {
+                    if (typeof parsed.body === 'string') {
+                        requestOptions.body = parsed.body;
+                    } else {
+                        requestOptions.body = JSON.stringify(parsed.body);
+                        if (!parsed.headers['Content-Type'] && !parsed.headers['content-type']) {
+                            requestOptions.headers['Content-Type'] = 'application/json';
+                        }
+                    }
+                }
+
+                const response = await fetch(parsed.url, requestOptions);
+                const responseText = await response.text();
+
+                return {
+                    success: response.ok,
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: Object.fromEntries(response.headers.entries()),
+                    data: responseText
+                };
+            } catch (error) {
+                return {
+                    success: false,
+                    status: 0,
+                    statusText: 'Network Error',
+                    headers: {},
+                    data: error.message,
+                    error: error.message
+                };
+            }
+        }
+
+        // Handle file upload
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            document.getElementById('loadingSection').classList.remove('hidden');
+            document.getElementById('resultsSection').classList.add('hidden');
+
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                const data = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+                // Process the Excel data
+                const testResults = [];
+                
+                for (let i = 1; i < data.length; i++) { // Skip header row
+                    const row = data[i];
+                    if (row && row.length >= 3) {
+                        const apiName = row[0] || `API-${i}`;
+                        const curl = row[1] || '';
+                        const variables = row[2] || '';
+
+                        if (curl) {
+                            // For demo, create a basic test result
+                            testResults.push({
+                                apiName,
+                                testCase: 'Direct Test',
+                                status: 'Ready',
+                                parameters: variables || 'No variables',
+                                response: 'Click Execute to test',
+                                errors: '',
+                                curlCommand: curl
+                            });
+                        }
+                    }
+                }
+
+                displayResults(testResults);
+            } catch (error) {
+                alert('Error processing Excel file: ' + error.message);
+            } finally {
+                document.getElementById('loadingSection').classList.add('hidden');
+            }
+        }
+
+        // Display results in table
+        function displayResults(results) {
+            const tbody = document.getElementById('resultsBody');
+            tbody.innerHTML = '';
+
+            results.forEach((result, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-blue-600">${result.apiName}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${result.testCase}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
+                            ${result.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="text-sm text-gray-900 max-w-xs truncate" title="${result.parameters}">
+                            ${result.parameters}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="text-sm text-gray-900 max-w-md truncate" title="${result.response}">
+                            ${result.response}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="text-gray-400">No errors</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <button 
+                            onclick="executeAndShowResult('${result.curlCommand.replace(/'/g, "\\'")}')"
+                            class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 transition-colors"
+                        >
+                            🚀 Execute
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            document.getElementById('resultsSection').classList.remove('hidden');
+        }
+
+        // Execute cURL and show result in new tab
+        async function executeAndShowResult(curlCommand) {
+            try {
+                const result = await executeCurl(curlCommand);
+                
+                let responseData = result.data;
+                try {
+                    const jsonData = JSON.parse(result.data);
+                    responseData = JSON.stringify(jsonData, null, 2);
+                } catch {
+                    // Not JSON, keep as-is
+                }
+
+                const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Response - ${result.status}</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; background: #f8f9fa; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden; }
+        .header { background: ${result.status >= 200 && result.status < 300 ? '#10b981' : result.status >= 400 ? '#ef4444' : '#f59e0b'}; color: white; padding: 20px; }
+        .status { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+        .client-info { background: rgba(255,255,255,0.2); padding: 10px; border-radius: 4px; margin-top: 10px; font-size: 14px; }
+        .section { padding: 20px; border-bottom: 1px solid #e5e7eb; }
+        .section:last-child { border-bottom: none; }
+        .section-title { font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #374151; }
+        .code-block { background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 6px; padding: 15px; font-family: 'Courier New', monospace; font-size: 14px; overflow-x: auto; white-space: pre-wrap; }
+        .response-data { background: #1f2937; color: #f9fafb; border-radius: 6px; padding: 20px; font-family: 'Courier New', monospace; font-size: 14px; overflow-x: auto; white-space: pre-wrap; line-height: 1.5; }
+        .copy-btn { background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px; margin-top: 10px; }
+        .copy-btn:hover { background: #2563eb; }
+        .headers-grid { display: grid; gap: 10px; }
+        .header-item { display: flex; padding: 8px 12px; background: #f9fafb; border-radius: 4px; border-left: 4px solid #3b82f6; }
+        .header-key { font-weight: 600; margin-right: 10px; color: #1f2937; min-width: 150px; }
+        .header-value { color: #6b7280; word-break: break-all; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="status">HTTP ${result.status} ${result.statusText}</div>
+            <div class="client-info">🌐 Executed directly from your browser with VPN access</div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">cURL Command</div>
+            <div class="code-block">${curlCommand}</div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Response Headers</div>
+            <div class="headers-grid">
+                ${Object.entries(result.headers).map(([key, value]) => 
+                  `<div class="header-item">
+                     <div class="header-key">${key}:</div>
+                     <div class="header-value">${value}</div>
+                   </div>`
+                ).join('')}
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Response Body</div>
+            <div class="response-data">${responseData}</div>
+        </div>
+    </div>
+</body>
+</html>`;
+
+                const newWindow = window.open('', '_blank');
+                if (newWindow) {
+                    newWindow.document.write(html);
+                    newWindow.document.close();
+                } else {
+                    alert('Please allow popups for this site.');
+                }
+            } catch (error) {
+                alert('Failed to execute cURL: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
