@@ -567,7 +567,9 @@ async function executeRequest(curlCommand: string, useProxy: boolean = true): Pr
 
         // Check if we're running locally (development) vs on Vercel (production)
         const isLocal = !process.env.VERCEL && !process.env.NEXTAUTH_URL;
-        const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || (isLocal ? 'http://localhost:3000' : 'https://quality-first-suite.vercel.app');
+        const baseUrl = process.env.NEXTAUTH_URL || 
+                        (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) || 
+                        (isLocal ? 'http://localhost:3000' : 'https://quality-first-suite.vercel.app');
         const proxyResponse = await fetch(`${baseUrl}/api/api-test-cases/proxy`, {
           method: 'POST',
           headers: {

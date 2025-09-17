@@ -127,7 +127,9 @@ async function executeRequest(curlCommand: string, useProxy: boolean = true) {
         hasBody: !!parsed.body
       });
 
-      const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'https://quality-first-suite.vercel.app';
+      const baseUrl = process.env.NEXTAUTH_URL || 
+                      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) || 
+                      'https://quality-first-suite.vercel.app';
       const proxyResponse = await fetch(`${baseUrl}/api/api-test-cases/proxy`, {
         method: 'POST',
         headers: {
