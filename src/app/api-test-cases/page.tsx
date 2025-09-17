@@ -54,7 +54,7 @@ export default function ApiTestCasesPage() {
       method: 'GET',
       url: '',
       headers: {} as Record<string, string>,
-      body: null as any
+      body: null as unknown
     };
 
     // Clean up the command
