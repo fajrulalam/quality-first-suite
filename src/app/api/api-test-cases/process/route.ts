@@ -487,7 +487,7 @@ async function executeRequest(curlCommand: string, useProxy: boolean = true): Pr
           hasBody: !!parsed.body
         });
 
-        const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3001';
+        const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'https://quality-first-suite.vercel.app' || 'http://localhost:3000';
         const proxyResponse = await fetch(`${baseUrl}/api/api-test-cases/proxy`, {
           method: 'POST',
           headers: {
