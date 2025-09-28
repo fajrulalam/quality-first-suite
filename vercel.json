@@ -1,1 +1,12 @@
-{ "rewrites": [{ "source": "/(.*)", "destination": "/" }] }
+{
+  "rewrites": [
+    {
+      "source": "/automate-failure-analysis/(.*)",
+      "destination": "/automate-failure-analysis/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
