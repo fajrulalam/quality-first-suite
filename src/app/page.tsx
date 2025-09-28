@@ -218,13 +218,14 @@ export default function Home() {
           --text-secondary: rgba(255, 255, 255, 0.8);
           --text-muted: rgba(255, 255, 255, 0.6);
         }
-        
+
         * {
           box-sizing: border-box;
         }
-        
+
         body {
-          font-family: "JetBrains Mono", "SF Mono", "Monaco", "Inconsolata", "Fira Code", "Droid Sans Mono", monospace;
+          font-family: "JetBrains Mono", "SF Mono", "Monaco", "Inconsolata",
+            "Fira Code", "Droid Sans Mono", monospace;
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           background-attachment: fixed;
           color: var(--text-primary);
@@ -232,22 +233,33 @@ export default function Home() {
           padding: 0;
           overflow-x: hidden;
         }
-        
+
         body::before {
-          content: '';
+          content: "";
           position: fixed;
           top: 0;
           left: 0;
           width: 100%;
           height: 100%;
-          background: 
-            radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.3) 0%, transparent 50%),
-            radial-gradient(circle at 40% 40%, rgba(0, 212, 255, 0.2) 0%, transparent 50%);
+          background: radial-gradient(
+              circle at 20% 80%,
+              rgba(120, 119, 198, 0.3) 0%,
+              transparent 50%
+            ),
+            radial-gradient(
+              circle at 80% 20%,
+              rgba(255, 107, 53, 0.3) 0%,
+              transparent 50%
+            ),
+            radial-gradient(
+              circle at 40% 40%,
+              rgba(0, 212, 255, 0.2) 0%,
+              transparent 50%
+            );
           pointer-events: none;
           z-index: -1;
         }
-        
+
         .glass-morphism {
           background: var(--glass-bg);
           backdrop-filter: blur(20px);
@@ -257,14 +269,14 @@ export default function Home() {
           box-shadow: var(--glass-shadow);
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         .glass-morphism:hover {
           background: rgba(255, 255, 255, 0.12);
           border-color: rgba(255, 255, 255, 0.2);
           box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
           transform: translateY(-4px);
         }
-        
+
         .brutal-card {
           background: var(--light);
           border: 4px solid var(--dark);
@@ -273,12 +285,12 @@ export default function Home() {
           color: var(--dark);
           transition: all 0.2s ease;
         }
-        
+
         .brutal-card:hover {
           transform: translate(-4px, -4px);
           box-shadow: 12px 12px 0px rgba(0, 0, 0, 0.8);
         }
-        
+
         .brutal-btn {
           background: var(--primary);
           border: 3px solid var(--dark);
@@ -293,65 +305,78 @@ export default function Home() {
           cursor: pointer;
           font-family: inherit;
         }
-        
+
         .brutal-btn:hover {
           transform: translate(-2px, -2px);
           box-shadow: 6px 6px 0px var(--dark);
         }
-        
+
         .brutal-btn:active {
           transform: translate(0px, 0px);
           box-shadow: 2px 2px 0px var(--dark);
         }
-        
+
         .brutal-btn.secondary {
           background: var(--secondary);
         }
-        
+
         .brutal-btn.accent {
           background: var(--accent);
           color: var(--dark);
         }
-        
+
         .neon-text {
-          text-shadow: 
-            0 0 5px currentColor,
-            0 0 10px currentColor,
-            0 0 15px currentColor,
-            0 0 20px currentColor;
+          text-shadow: 0 0 5px currentColor, 0 0 10px currentColor,
+            0 0 15px currentColor, 0 0 20px currentColor;
         }
-        
+
         .grid-pattern {
-          background-image: 
-            linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+          background-image: linear-gradient(
+              rgba(255, 255, 255, 0.1) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              90deg,
+              rgba(255, 255, 255, 0.1) 1px,
+              transparent 1px
+            );
           background-size: 50px 50px;
         }
-        
+
         @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
+          0%,
+          100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
         }
-        
+
         .floating {
           animation: float 3s ease-in-out infinite;
         }
-        
+
         @keyframes pulse-glow {
-          0%, 100% { box-shadow: 0 0 20px rgba(0, 102, 255, 0.5); }
-          50% { box-shadow: 0 0 40px rgba(0, 102, 255, 0.8); }
+          0%,
+          100% {
+            box-shadow: 0 0 20px rgba(0, 102, 255, 0.5);
+          }
+          50% {
+            box-shadow: 0 0 40px rgba(0, 102, 255, 0.8);
+          }
         }
-        
+
         .pulse-glow {
           animation: pulse-glow 2s ease-in-out infinite;
         }
-        
+
         .shimmer-progress {
           position: relative;
           overflow: hidden;
           background-color: rgba(255, 255, 255, 0.1);
         }
-        
+
         .shimmer-progress::after {
           content: "";
           position: absolute;
@@ -367,27 +392,31 @@ export default function Home() {
           );
           animation: shimmer 1.5s infinite linear;
         }
-        
+
         @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(100%);
+          }
         }
-        
+
         .custom-scrollbar::-webkit-scrollbar {
           width: 8px;
           height: 8px;
         }
-        
+
         .custom-scrollbar::-webkit-scrollbar-track {
           background: rgba(255, 255, 255, 0.1);
           border-radius: 10px;
         }
-        
+
         .custom-scrollbar::-webkit-scrollbar-thumb {
           background: var(--primary);
           border-radius: 10px;
         }
-        
+
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
           background: var(--accent);
         }
@@ -448,7 +477,9 @@ export default function Home() {
           {/* Hero Section */}
           <div className="text-center mb-20 relative">
             <div className="absolute inset-0 flex items-center justify-center opacity-10">
-              <div className="text-[20rem] font-black text-white select-none">QA</div>
+              <div className="text-[20rem] font-black text-white select-none">
+                QA
+              </div>
             </div>
             <div className="relative z-10">
               <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8">
@@ -460,9 +491,11 @@ export default function Home() {
               </h1>
               <div className="max-w-3xl mx-auto mb-8">
                 <p className="text-xl md:text-2xl text-white/80 font-mono leading-relaxed">
-                  {'>'} EXTRACT_DATA(reports.html)<br/>
-                  {'>'} ANALYZE_FAILURES()<br/>
-                  {'>'} OPTIMIZE_TESTING()
+                  {">"} EXTRACT_DATA(reports.html)
+                  <br />
+                  {">"} ANALYZE_FAILURES()
+                  <br />
+                  {">"} OPTIMIZE_TESTING()
                 </p>
               </div>
               <div className="text-sm text-white/60 font-mono">
@@ -479,7 +512,9 @@ export default function Home() {
                   <div className="brutal-card p-6 h-full">
                     <div className="text-center">
                       <div className="w-16 h-16 mx-auto mb-4 bg-green-500 border-4 border-black flex items-center justify-center">
-                        <span className="text-2xl font-black text-white">API</span>
+                        <span className="text-2xl font-black text-white">
+                          API
+                        </span>
                       </div>
                       <h3 className="text-lg font-black mb-2 uppercase tracking-wide">
                         API TEST CASES
@@ -495,7 +530,9 @@ export default function Home() {
                   <div className="brutal-card p-6 h-full">
                     <div className="text-center">
                       <div className="w-16 h-16 mx-auto mb-4 bg-blue-500 border-4 border-black flex items-center justify-center">
-                        <span className="text-2xl font-black text-white">DATA</span>
+                        <span className="text-2xl font-black text-white">
+                          DATA
+                        </span>
                       </div>
                       <h3 className="text-lg font-black mb-2 uppercase tracking-wide">
                         TEST DATA
@@ -511,7 +548,9 @@ export default function Home() {
                   <div className="brutal-card p-6 h-full">
                     <div className="text-center">
                       <div className="w-16 h-16 mx-auto mb-4 bg-yellow-500 border-4 border-black flex items-center justify-center">
-                        <span className="text-2xl font-black text-black">AI</span>
+                        <span className="text-2xl font-black text-black">
+                          AI
+                        </span>
                       </div>
                       <h3 className="text-lg font-black mb-2 uppercase tracking-wide">
                         AI ASSISTANT
@@ -527,7 +566,9 @@ export default function Home() {
                   <div className="brutal-card p-6 h-full">
                     <div className="text-center">
                       <div className="w-16 h-16 mx-auto mb-4 bg-purple-500 border-4 border-black flex items-center justify-center">
-                        <span className="text-2xl font-black text-white">DOC</span>
+                        <span className="text-2xl font-black text-white">
+                          DOC
+                        </span>
                       </div>
                       <h3 className="text-lg font-black mb-2 uppercase tracking-wide">
                         DOCUMENTOR
@@ -553,25 +594,37 @@ export default function Home() {
                     <div className="w-20 h-20 mx-auto mb-4 glass-morphism rounded-full flex items-center justify-center pulse-glow">
                       <span className="text-2xl">⚡</span>
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-2">FAST_PROCESSING</h3>
+                    <h3 className="text-xl font-bold text-white mb-2">
+                      FAST_PROCESSING
+                    </h3>
                     <p className="text-white/70 font-mono text-sm">
                       Lightning-fast HTML report analysis with Web Workers
                     </p>
                   </div>
-                  <div className="text-center floating" style={{animationDelay: '0.5s'}}>
+                  <div
+                    className="text-center floating"
+                    style={{ animationDelay: "0.5s" }}
+                  >
                     <div className="w-20 h-20 mx-auto mb-4 glass-morphism rounded-full flex items-center justify-center pulse-glow">
                       <span className="text-2xl">🔍</span>
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-2">SMART_ANALYSIS</h3>
+                    <h3 className="text-xl font-bold text-white mb-2">
+                      SMART_ANALYSIS
+                    </h3>
                     <p className="text-white/70 font-mono text-sm">
                       Intelligent failure pattern detection and categorization
                     </p>
                   </div>
-                  <div className="text-center floating" style={{animationDelay: '1s'}}>
+                  <div
+                    className="text-center floating"
+                    style={{ animationDelay: "1s" }}
+                  >
                     <div className="w-20 h-20 mx-auto mb-4 glass-morphism rounded-full flex items-center justify-center pulse-glow">
                       <span className="text-2xl">📊</span>
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-2">DATA_EXPORT</h3>
+                    <h3 className="text-xl font-bold text-white mb-2">
+                      DATA_EXPORT
+                    </h3>
                     <p className="text-white/70 font-mono text-sm">
                       Export to CSV, Excel, or copy to clipboard instantly
                     </p>
@@ -620,12 +673,12 @@ export default function Home() {
                 <div className="mt-8 p-4 bg-black/20 rounded-lg border border-white/10">
                   <p className="text-white/80 font-mono text-sm text-center">
                     {analysisMode === "general"
-                      ? `${'>'}UPLOAD_SINGLE_HTML_REPORT()`
+                      ? `${">"}UPLOAD_SINGLE_HTML_REPORT()`
                       : analysisMode === "regression"
                       ? firstRunProcessed
-                        ? `${'>'}UPLOAD_SECOND_RUN_REPORT()`
-                        : `${'>'}UPLOAD_FIRST_RUN_REPORT()`
-                      : `${'>'}UPLOAD_API_HTML_REPORT()`}
+                        ? `${">"}UPLOAD_SECOND_RUN_REPORT()`
+                        : `${">"}UPLOAD_FIRST_RUN_REPORT()`
+                      : `${">"}UPLOAD_API_HTML_REPORT()`}
                   </p>
                 </div>
               </section>
