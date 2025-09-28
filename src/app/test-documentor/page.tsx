@@ -5,6 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 
+// Force dynamic rendering for this page
+export const dynamic = "force-dynamic";
+
 // File System Access API types
 interface FileSystemDirectoryHandle {
   name: string;

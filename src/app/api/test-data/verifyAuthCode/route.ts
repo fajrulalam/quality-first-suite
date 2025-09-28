@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 
-export const dynamic = 'force-static';
 import { makeApiRequest, extractTokens } from '@/utils/apiClient';
 
 export async function POST(request: Request) {

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export const dynamic = 'force-static';
 import * as XLSX from 'xlsx';
 
 // Handle CORS preflight requests

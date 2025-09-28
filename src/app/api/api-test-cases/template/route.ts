@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import * as XLSX from "xlsx";
 
-export const dynamic = "force-static";
 
 export async function GET() {
   try {
