@@ -427,18 +427,18 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center">
-              <div className="relative">
-                <Image
-                  src="/tiketcom logo.png"
-                  alt="Tiket.com Logo"
-                  width={120}
-                  height={40}
-                  className="h-10 w-auto brightness-0 invert"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-400 opacity-80 mix-blend-multiply rounded"></div>
-              </div>
+              {/*<div className="relative">*/}
+              {/*  <Image*/}
+              {/*    src="/tiketcom logo.png"*/}
+              {/*    alt="Tiket.com Logo"*/}
+              {/*    width={120}*/}
+              {/*    height={40}*/}
+              {/*    className="h-10 w-auto brightness-0 invert"*/}
+              {/*  />*/}
+              {/*  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-400 opacity-80 mix-blend-multiply rounded"></div>*/}
+              {/*</div>*/}
               <span className="ml-4 text-xl font-black text-white tracking-tight">
-                QA<span className="text-cyan-400">SUITE</span>
+                SQA Tools Suite
               </span>
             </div>
             <nav className="hidden lg:flex items-center space-x-2">
@@ -483,11 +483,11 @@ export default function Home() {
             </div>
             <div className="relative z-10">
               <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8">
-                <span className="block text-white neon-text">AUTOMATED</span>
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600">
-                  FAILURE
+                <span className="block text-white ">SQA</span>
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white">
+
                 </span>
-                <span className="block text-white">ANALYSIS</span>
+                <span className="block text-white">Tools Suite</span>
               </h1>
               <div className="max-w-3xl mx-auto mb-8">
                 <p className="text-xl md:text-2xl text-white/80 font-mono leading-relaxed">
@@ -499,7 +499,7 @@ export default function Home() {
                 </p>
               </div>
               <div className="text-sm text-white/60 font-mono">
-                [DEVELOPED_BY: ACCOM_SQA_TEAM]
+                [DEVELOPED_BY: M Fajrul Alam, Sunny Kumar, Amit Kumar Dwivedi]
               </div>
             </div>
           </div>
@@ -526,23 +526,23 @@ export default function Home() {
                   </div>
                 </Link>
 
-                <Link href="/test-data" className="group">
-                  <div className="brutal-card p-6 h-full">
-                    <div className="text-center">
-                      <div className="w-16 h-16 mx-auto mb-4 bg-blue-500 border-4 border-black flex items-center justify-center">
-                        <span className="text-2xl font-black text-white">
-                          DATA
-                        </span>
-                      </div>
-                      <h3 className="text-lg font-black mb-2 uppercase tracking-wide">
-                        TEST DATA
-                      </h3>
-                      <p className="text-sm font-mono text-gray-600">
-                        CREATE_AUTOMATED_SEQUENCES()
-                      </p>
-                    </div>
-                  </div>
-                </Link>
+                {/*<Link href="/test-data" className="group">*/}
+                {/*  <div className="brutal-card p-6 h-full">*/}
+                {/*    <div className="text-center">*/}
+                {/*      <div className="w-16 h-16 mx-auto mb-4 bg-blue-500 border-4 border-black flex items-center justify-center">*/}
+                {/*        <span className="text-2xl font-black text-white">*/}
+                {/*          DATA*/}
+                {/*        </span>*/}
+                {/*      </div>*/}
+                {/*      <h3 className="text-lg font-black mb-2 uppercase tracking-wide">*/}
+                {/*        TEST DATA*/}
+                {/*      </h3>*/}
+                {/*      <p className="text-sm font-mono text-gray-600">*/}
+                {/*        CREATE_AUTOMATED_SEQUENCES()*/}
+                {/*      </p>*/}
+                {/*    </div>*/}
+                {/*  </div>*/}
+                {/*</Link>*/}
 
                 <Link href="/chatbot" className="group">
                   <div className="brutal-card p-6 h-full">
@@ -574,7 +574,7 @@ export default function Home() {
                         DOCUMENTOR
                       </h3>
                       <p className="text-sm font-mono text-gray-600">
-                        DOCUMENT_TEST_CASES()
+                        TIDY_TESTING_DOCUMENTATION()
                       </p>
                     </div>
                   </div>
@@ -582,61 +582,61 @@ export default function Home() {
               </section>
 
               {/* Feature Showcase */}
-              <section className="glass-morphism p-8 mb-12">
-                <div className="text-center mb-8">
-                  <h2 className="text-3xl font-black text-white mb-4 uppercase tracking-wider">
-                    SYSTEM_FEATURES
-                  </h2>
-                  <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto"></div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <div className="text-center floating">
-                    <div className="w-20 h-20 mx-auto mb-4 glass-morphism rounded-full flex items-center justify-center pulse-glow">
-                      <span className="text-2xl">⚡</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-2">
-                      FAST_PROCESSING
-                    </h3>
-                    <p className="text-white/70 font-mono text-sm">
-                      Lightning-fast HTML report analysis with Web Workers
-                    </p>
-                  </div>
-                  <div
-                    className="text-center floating"
-                    style={{ animationDelay: "0.5s" }}
-                  >
-                    <div className="w-20 h-20 mx-auto mb-4 glass-morphism rounded-full flex items-center justify-center pulse-glow">
-                      <span className="text-2xl">🔍</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-2">
-                      SMART_ANALYSIS
-                    </h3>
-                    <p className="text-white/70 font-mono text-sm">
-                      Intelligent failure pattern detection and categorization
-                    </p>
-                  </div>
-                  <div
-                    className="text-center floating"
-                    style={{ animationDelay: "1s" }}
-                  >
-                    <div className="w-20 h-20 mx-auto mb-4 glass-morphism rounded-full flex items-center justify-center pulse-glow">
-                      <span className="text-2xl">📊</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-2">
-                      DATA_EXPORT
-                    </h3>
-                    <p className="text-white/70 font-mono text-sm">
-                      Export to CSV, Excel, or copy to clipboard instantly
-                    </p>
-                  </div>
-                </div>
-              </section>
+              {/*<section className="glass-morphism p-8 mb-12">*/}
+              {/*  <div className="text-center mb-8">*/}
+              {/*    <h2 className="text-3xl font-black text-white mb-4 uppercase tracking-wider">*/}
+              {/*      SYSTEM_FEATURES*/}
+              {/*    </h2>*/}
+              {/*    <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto"></div>*/}
+              {/*  </div>*/}
+              {/*  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">*/}
+              {/*    <div className="text-center floating">*/}
+              {/*      <div className="w-20 h-20 mx-auto mb-4 glass-morphism rounded-full flex items-center justify-center pulse-glow">*/}
+              {/*        <span className="text-2xl">⚡</span>*/}
+              {/*      </div>*/}
+              {/*      <h3 className="text-xl font-bold text-white mb-2">*/}
+              {/*        FAST_PROCESSING*/}
+              {/*      </h3>*/}
+              {/*      <p className="text-white/70 font-mono text-sm">*/}
+              {/*        Lightning-fast HTML report analysis with Web Workers*/}
+              {/*      </p>*/}
+              {/*    </div>*/}
+              {/*    <div*/}
+              {/*      className="text-center floating"*/}
+              {/*      style={{ animationDelay: "0.5s" }}*/}
+              {/*    >*/}
+              {/*      <div className="w-20 h-20 mx-auto mb-4 glass-morphism rounded-full flex items-center justify-center pulse-glow">*/}
+              {/*        <span className="text-2xl">🔍</span>*/}
+              {/*      </div>*/}
+              {/*      <h3 className="text-xl font-bold text-white mb-2">*/}
+              {/*        SMART_ANALYSIS*/}
+              {/*      </h3>*/}
+              {/*      <p className="text-white/70 font-mono text-sm">*/}
+              {/*        Intelligent failure pattern detection and categorization*/}
+              {/*      </p>*/}
+              {/*    </div>*/}
+              {/*    <div*/}
+              {/*      className="text-center floating"*/}
+              {/*      style={{ animationDelay: "1s" }}*/}
+              {/*    >*/}
+              {/*      <div className="w-20 h-20 mx-auto mb-4 glass-morphism rounded-full flex items-center justify-center pulse-glow">*/}
+              {/*        <span className="text-2xl">📊</span>*/}
+              {/*      </div>*/}
+              {/*      <h3 className="text-xl font-bold text-white mb-2">*/}
+              {/*        DATA_EXPORT*/}
+              {/*      </h3>*/}
+              {/*      <p className="text-white/70 font-mono text-sm">*/}
+              {/*        Export to CSV, Excel, or copy to clipboard instantly*/}
+              {/*      </p>*/}
+              {/*    </div>*/}
+              {/*  </div>*/}
+              {/*</section>*/}
 
               {/* Analysis Mode Selection */}
               <section className="glass-morphism p-8">
                 <div className="text-center mb-8">
                   <h2 className="text-3xl font-black text-white mb-4 uppercase tracking-wider">
-                    SELECT_ANALYSIS_MODE
+                    EXTENT_REPORT FAILURE ANALYSIS
                   </h2>
                   <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto"></div>
                 </div>
