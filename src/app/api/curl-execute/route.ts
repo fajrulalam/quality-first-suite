@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+export const dynamic = 'force-static';
+
 // Copy the exact same functions from the working route
 interface ParsedCurl {
   method: string;

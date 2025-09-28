@@ -140,7 +140,7 @@ export default function TestDocumentor() {
 
   const truncateTestCase = (testCase: string): string => {
     // Remove period at the end if exists
-    let processed = testCase.replace(/\.$/, "");
+    const processed = testCase.replace(/\.$/, "");
 
     if (processed.length <= 230) {
       return processed;
@@ -698,9 +698,9 @@ function TestCaseTile({
   onStatusChange,
   onScreenshotPaste,
   onImageNameClick,
-  onImageNameDelete,
-  showDeleteConfirm,
-  setShowDeleteConfirm,
+  onImageNameDelete: _onImageNameDelete,
+  showDeleteConfirm: _showDeleteConfirm,
+  setShowDeleteConfirm: _setShowDeleteConfirm,
 }: TestCaseTileProps) {
   const [modifier, setModifier] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);

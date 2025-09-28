@@ -1,9 +1,32 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
+
+// File System Access API types
+interface FileSystemDirectoryHandle {
+  name: string;
+  getFileHandle(
+    name: string,
+    options?: { create?: boolean }
+  ): Promise<FileSystemFileHandle>;
+}
+
+interface FileSystemFileHandle {
+  createWritable(): Promise<FileSystemWritableFileStream>;
+}
+
+interface FileSystemWritableFileStream {
+  write(data: Blob): Promise<void>;
+  close(): Promise<void>;
+}
+
+interface WindowWithFileSystemAccess extends Window {
+  showDirectoryPicker?: () => Promise<FileSystemDirectoryHandle>;
+  selectedDirectoryHandle?: FileSystemDirectoryHandle;
+}
 
 interface TestCase {
   id: string;
@@ -45,7 +68,7 @@ const statusOptions = [
   { value: "retest", label: "Retest" },
 ];
 
-export default function TestDocumentor() {
+function TestDocumentorContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const runId = searchParams.get("runId");
@@ -150,7 +173,7 @@ export default function TestDocumentor() {
 
   const truncateTestCase = (testCase: string): string => {
     // Remove period at the end if exists
-    let processed = testCase.replace(/\.$/, "");
+    const processed = testCase.replace(/\.$/, "");
 
     if (processed.length <= 230) {
       return processed;
@@ -302,7 +325,8 @@ export default function TestDocumentor() {
 
             // Try to save using File System Access API if available and directory is selected
             try {
-              const directoryHandle = (window as any).selectedDirectoryHandle;
+              const directoryHandle = (window as WindowWithFileSystemAccess)
+                .selectedDirectoryHandle;
               if (directoryHandle && "showDirectoryPicker" in window) {
                 const fileHandle = await directoryHandle.getFileHandle(
                   fileName,
@@ -317,7 +341,7 @@ export default function TestDocumentor() {
                   "File System Access API not available or no directory selected"
                 );
               }
-            } catch (error) {
+            } catch {
               // Fallback to regular download
               console.log("Using fallback download method");
               const url = URL.createObjectURL(blob);
@@ -414,13 +438,15 @@ export default function TestDocumentor() {
     try {
       // Try to use the modern File System Access API if available
       if ("showDirectoryPicker" in window) {
-        const directoryHandle = await (window as any).showDirectoryPicker();
+        const directoryHandle = await (window as WindowWithFileSystemAccess)
+          .showDirectoryPicker!();
         setSaveFolder(directoryHandle.name);
         // Store the directory handle for later use
-        (window as any).selectedDirectoryHandle = directoryHandle;
+        (window as WindowWithFileSystemAccess).selectedDirectoryHandle =
+          directoryHandle;
         return;
       }
-    } catch (error) {
+    } catch {
       console.log("File System Access API not supported or user cancelled");
     }
 
@@ -693,10 +719,7 @@ export default function TestDocumentor() {
                     onStatusChange={handleStatusChange}
                     onScreenshotPaste={handleScreenshotPaste}
                     onImageNameClick={handleImageNameClick}
-                    onImageNameDelete={handleImageNameDelete}
                     onImagePaste={handleImagePaste}
-                    showDeleteConfirm={showDeleteConfirm}
-                    setShowDeleteConfirm={setShowDeleteConfirm}
                   />
                 ))}
               </div>
@@ -769,10 +792,7 @@ interface TestCaseTileProps {
   onStatusChange: (testId: string, status: TestCase["status"]) => void;
   onScreenshotPaste: (testId: string, modifier: string) => void;
   onImageNameClick: (imageName: string) => void;
-  onImageNameDelete: (testId: string, imageName: string) => void;
   onImagePaste: (testId: string) => void;
-  showDeleteConfirm: string | null;
-  setShowDeleteConfirm: (value: string | null) => void;
 }
 
 function TestCaseTile({
@@ -780,10 +800,7 @@ function TestCaseTile({
   onStatusChange,
   onScreenshotPaste,
   onImageNameClick,
-  onImageNameDelete,
   onImagePaste,
-  showDeleteConfirm,
-  setShowDeleteConfirm,
 }: TestCaseTileProps) {
   const [modifier, setModifier] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -810,11 +827,6 @@ function TestCaseTile({
         }
       }
     }
-  };
-
-  const handleContextMenu = (e: React.MouseEvent, imageName: string) => {
-    e.preventDefault();
-    setShowDeleteConfirm(`${testCase.id}|${imageName}`);
   };
 
   return (
@@ -898,9 +910,8 @@ function TestCaseTile({
               <button
                 key={index}
                 onClick={() => onImageNameClick(imageName)}
-                onContextMenu={(e) => handleContextMenu(e, imageName)}
                 className="text-xs text-gray-500 hover:text-purple-600 hover:underline transition-colors duration-200 cursor-pointer"
-                title="Click to copy, right-click to delete"
+                title="Click to copy"
               >
                 {imageName}
               </button>
@@ -909,5 +920,19 @@ function TestCaseTile({
         </div>
       )}
     </div>
+  );
+}
+
+export default function TestDocumentor() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+        </div>
+      }
+    >
+      <TestDocumentorContent />
+    </Suspense>
   );
 }

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+export const dynamic = 'force-static';
+
 // Handle CORS preflight requests
 export async function OPTIONS() {
   return new NextResponse(null, {
