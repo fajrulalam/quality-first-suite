@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, Suspense } from "react";
 import Link from "next/link";
-import Image from "next/image";
+
 import { useSearchParams, useRouter } from "next/navigation";
 
 // Force dynamic rendering for this page
@@ -550,13 +550,13 @@ function TestDocumentorContent() {
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center">
               <Link href="/" className="flex items-center">
-                <Image
-                  src="/tiketcom logo.png"
-                  alt="Tiket.com Logo"
-                  width={120}
-                  height={40}
-                  className="h-10 w-auto"
-                />
+                {/*<Image*/}
+                {/*  src="/tiketcom logo.png"*/}
+                {/*  alt="Tiket.com Logo"*/}
+                {/*  width={120}*/}
+                {/*  height={40}*/}
+                {/*  className="h-10 w-auto"*/}
+                {/*/>*/}
                 <span className="ml-3 text-2xl font-bold text-[var(--tiket-blue)]">
                   Test Case Documentor
                 </span>
@@ -583,7 +583,7 @@ function TestDocumentorContent() {
               <span className="block text-purple-600">{testRunName}</span>
             </h1>
             <p className="mt-6 max-w-2xl mx-auto text-xl text-[var(--text-secondary)]">
-              Document your test cases with screenshots
+              Your screenshots will be automically named to your test case!
             </p>
           </div>
 
@@ -605,15 +605,15 @@ function TestDocumentorContent() {
                     </button>
                     {saveFolder && (
                       <span className="text-sm text-[var(--text-secondary)]">
-                        📁 {saveFolder}
+                        Screenshots will be saved to: {saveFolder}
                       </span>
                     )}
                   </div>
-                  <div className="text-xs text-gray-500 bg-yellow-50 p-3 rounded-lg border border-yellow-200">
-                    <strong>Note:</strong> Modern browsers (Chrome 86+, Edge
-                    86+) support direct folder saving. For other browsers, files
-                    will be saved to your Downloads folder.
-                  </div>
+                  {/*<div className="text-xs text-gray-500 bg-yellow-50 p-3 rounded-lg border border-yellow-200">*/}
+                  {/*  <strong>Note:</strong> Modern browsers (Chrome 86+, Edge*/}
+                  {/*  86+) support direct folder saving. For other browsers, files*/}
+                  {/*  will be saved to your Downloads folder.*/}
+                  {/*</div>*/}
                 </div>
               </section>
 

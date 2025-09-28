@@ -164,9 +164,9 @@ export default function TestRuns() {
               {/*    height={40}*/}
               {/*    className="h-10 w-auto"*/}
               {/*  />*/}
-              {/*  <span className="ml-3 text-2xl font-bold text-[var(--tiket-blue)]">*/}
-              {/*    Test Documentor - Test Runs*/}
-              {/*  </span>*/}
+                <span className="ml-3 text-2xl font-bold text-[var(--tiket-blue)]">
+                  Manage Test Runs
+                </span>
               {/*</Link>*/}
             </div>
             <div className="flex items-center space-x-4">
