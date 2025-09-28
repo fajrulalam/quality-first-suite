@@ -698,9 +698,7 @@ function TestCaseTile({
   onStatusChange,
   onScreenshotPaste,
   onImageNameClick,
-  onImageNameDelete: _onImageNameDelete,
-  showDeleteConfirm: _showDeleteConfirm,
-  setShowDeleteConfirm: _setShowDeleteConfirm,
+  setShowDeleteConfirm,
 }: TestCaseTileProps) {
   const [modifier, setModifier] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
