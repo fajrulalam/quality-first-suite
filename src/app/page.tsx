@@ -20,9 +20,9 @@ import { orderTestCases } from "../utils/orderingUtils";
 
 export default function Home() {
   // Analysis mode selection
-  const [analysisMode, setAnalysisMode] = useState<"general" | "regression" | "api">(
-    "general"
-  );
+  const [analysisMode, setAnalysisMode] = useState<
+    "general" | "regression" | "api"
+  >("general");
 
   // UI state
   const [isProcessing, setIsProcessing] = useState(false);
@@ -320,6 +320,12 @@ export default function Home() {
               >
                 Chat with AI Assistant ✨
               </Link>
+              <Link
+                href="/test-runs"
+                className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors duration-200 shadow-md hover:shadow-lg"
+              >
+                Test Case Documentor 📋
+              </Link>
             </div>
           </div>
         </div>
@@ -358,38 +364,105 @@ export default function Home() {
                     href="/api-test-cases"
                     className="flex items-center px-6 py-4 bg-green-600 hover:bg-green-700 text-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 group"
                   >
-                    <svg className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <svg
+                      className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                     <div>
-                      <div className="font-semibold text-lg">API Auto Test Cases</div>
-                      <div className="text-green-100 text-sm">Generate systematic API test cases from Excel</div>
+                      <div className="font-semibold text-lg">
+                        API Auto Test Cases
+                      </div>
+                      <div className="text-green-100 text-sm">
+                        Generate systematic API test cases from Excel
+                      </div>
                     </div>
                   </Link>
-                  
+
                   <Link
                     href="/test-data"
                     className="flex items-center px-6 py-4 bg-[var(--tiket-blue)] hover:bg-blue-700 text-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 group"
                   >
-                    <svg className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    <svg
+                      className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                      />
                     </svg>
                     <div>
-                      <div className="font-semibold text-lg">Create Test Data</div>
-                      <div className="text-blue-100 text-sm">Generate automated test data sequences</div>
+                      <div className="font-semibold text-lg">
+                        Create Test Data
+                      </div>
+                      <div className="text-blue-100 text-sm">
+                        Generate automated test data sequences
+                      </div>
                     </div>
                   </Link>
-                  
+
                   <Link
                     href="/chatbot"
                     className="flex items-center px-6 py-4 bg-[var(--tiket-yellow)] hover:bg-yellow-400 text-gray-900 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 group"
                   >
-                    <svg className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    <svg
+                      className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                      />
                     </svg>
                     <div>
                       <div className="font-semibold text-lg">AI Assistant</div>
-                      <div className="text-yellow-800 text-sm">Chat with intelligent SQA assistant</div>
+                      <div className="text-yellow-800 text-sm">
+                        Chat with intelligent SQA assistant
+                      </div>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/test-runs"
+                    className="flex items-center px-6 py-4 bg-purple-600 hover:bg-purple-700 text-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 group"
+                  >
+                    <svg
+                      className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12h.01M12 12h.01M16 12h.01M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                      />
+                    </svg>
+                    <div>
+                      <div className="font-semibold text-lg">
+                        Test Case Documentor
+                      </div>
+                      <div className="text-purple-100 text-sm">
+                        Document test cases with screenshots
+                      </div>
                     </div>
                   </Link>
                 </div>
