@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface TestRun {
@@ -157,18 +156,18 @@ export default function TestRuns() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center">
-              <Link href="/" className="flex items-center">
-                <Image
-                  src="/tiketcom logo.png"
-                  alt="Tiket.com Logo"
-                  width={120}
-                  height={40}
-                  className="h-10 w-auto"
-                />
-                <span className="ml-3 text-2xl font-bold text-[var(--tiket-blue)]">
-                  Test Documentor - Test Runs
-                </span>
-              </Link>
+              {/*<Link href="/" className="flex items-center">*/}
+              {/*  <Image*/}
+              {/*    src="/tiketcom logo.png"*/}
+              {/*    alt="Tiket.com Logo"*/}
+              {/*    width={120}*/}
+              {/*    height={40}*/}
+              {/*    className="h-10 w-auto"*/}
+              {/*  />*/}
+              {/*  <span className="ml-3 text-2xl font-bold text-[var(--tiket-blue)]">*/}
+              {/*    Test Documentor - Test Runs*/}
+              {/*  </span>*/}
+              {/*</Link>*/}
             </div>
             <div className="flex items-center space-x-4">
               <Link
