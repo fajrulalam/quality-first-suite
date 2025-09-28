@@ -2,7 +2,6 @@
 
 import { useState, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
 
 // Import types and utility functions
 import { TestData } from "@/utils/types";
