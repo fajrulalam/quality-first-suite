@@ -1,9 +1,1 @@
-{
-  "trailingSlash": false,
-  "rewrites": [
-    {
-      "source": "/test-documentor/:runId*",
-      "destination": "/test-documentor/[runId]"
-    }
-  ]
-}
+{ "rewrites": [{ "source": "/(.*)", "destination": "/" }] }
