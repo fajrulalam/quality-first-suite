@@ -205,46 +205,153 @@ export default function Home() {
     <>
       <style jsx global>{`
         :root {
-          --tiket-blue: #0064d2; /* Tiket.com primary blue */
-          --tiket-yellow: #ffc900; /* Tiket.com accent yellow */
-          --tiket-light-blue: #e6f3ff; /* Lighter blue for backgrounds/accents */
-          --glass-bg: rgba(255, 255, 255, 0.6);
-          --glass-border: rgba(255, 255, 255, 0.3);
-          --shadow-color: rgba(0, 0, 0, 0.1);
-          --text-primary: #1a202c; /* Dark gray for primary text */
-          --text-secondary: #4a5568; /* Medium gray for secondary text */
+          --primary: #0066ff;
+          --secondary: #ff6b35;
+          --accent: #00d4ff;
+          --dark: #0a0a0a;
+          --light: #ffffff;
+          --glass-bg: rgba(255, 255, 255, 0.08);
+          --glass-border: rgba(255, 255, 255, 0.12);
+          --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+          --brutal-shadow: 8px 8px 0px rgba(0, 0, 0, 0.8);
+          --text-primary: #ffffff;
+          --text-secondary: rgba(255, 255, 255, 0.8);
+          --text-muted: rgba(255, 255, 255, 0.6);
         }
+        
+        * {
+          box-sizing: border-box;
+        }
+        
         body {
-          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-            Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans",
-            "Helvetica Neue", sans-serif;
-          background-image: linear-gradient(
-            to bottom,
-            var(--tiket-light-blue),
-            white 30%,
-            #fff9e6 100%
-          );
+          font-family: "JetBrains Mono", "SF Mono", "Monaco", "Inconsolata", "Fira Code", "Droid Sans Mono", monospace;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background-attachment: fixed;
           color: var(--text-primary);
+          margin: 0;
+          padding: 0;
+          overflow-x: hidden;
         }
-        .glass-card {
+        
+        body::before {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: 
+            radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(0, 212, 255, 0.2) 0%, transparent 50%);
+          pointer-events: none;
+          z-index: -1;
+        }
+        
+        .glass-morphism {
           background: var(--glass-bg);
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px); /* For Safari */
-          border-radius: 16px;
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
           border: 1px solid var(--glass-border);
-          box-shadow: 0 8px 32px 0 var(--shadow-color);
-          padding: 2rem;
-          transition: all 0.3s ease;
+          border-radius: 24px;
+          box-shadow: var(--glass-shadow);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .glass-card:hover {
-          box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.15);
-          transform: translateY(-2px);
+        
+        .glass-morphism:hover {
+          background: rgba(255, 255, 255, 0.12);
+          border-color: rgba(255, 255, 255, 0.2);
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+          transform: translateY(-4px);
         }
+        
+        .brutal-card {
+          background: var(--light);
+          border: 4px solid var(--dark);
+          border-radius: 0;
+          box-shadow: var(--brutal-shadow);
+          color: var(--dark);
+          transition: all 0.2s ease;
+        }
+        
+        .brutal-card:hover {
+          transform: translate(-4px, -4px);
+          box-shadow: 12px 12px 0px rgba(0, 0, 0, 0.8);
+        }
+        
+        .brutal-btn {
+          background: var(--primary);
+          border: 3px solid var(--dark);
+          border-radius: 0;
+          color: var(--light);
+          font-weight: 900;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          padding: 16px 32px;
+          box-shadow: 4px 4px 0px var(--dark);
+          transition: all 0.15s ease;
+          cursor: pointer;
+          font-family: inherit;
+        }
+        
+        .brutal-btn:hover {
+          transform: translate(-2px, -2px);
+          box-shadow: 6px 6px 0px var(--dark);
+        }
+        
+        .brutal-btn:active {
+          transform: translate(0px, 0px);
+          box-shadow: 2px 2px 0px var(--dark);
+        }
+        
+        .brutal-btn.secondary {
+          background: var(--secondary);
+        }
+        
+        .brutal-btn.accent {
+          background: var(--accent);
+          color: var(--dark);
+        }
+        
+        .neon-text {
+          text-shadow: 
+            0 0 5px currentColor,
+            0 0 10px currentColor,
+            0 0 15px currentColor,
+            0 0 20px currentColor;
+        }
+        
+        .grid-pattern {
+          background-image: 
+            linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+          background-size: 50px 50px;
+        }
+        
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
+        
+        .floating {
+          animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+          0%, 100% { box-shadow: 0 0 20px rgba(0, 102, 255, 0.5); }
+          50% { box-shadow: 0 0 40px rgba(0, 102, 255, 0.8); }
+        }
+        
+        .pulse-glow {
+          animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
         .shimmer-progress {
           position: relative;
           overflow: hidden;
-          background-color: #e0e0e0; /* Base color of progress bar */
+          background-color: rgba(255, 255, 255, 0.1);
         }
+        
         .shimmer-progress::after {
           content: "";
           position: absolute;
@@ -260,226 +367,227 @@ export default function Home() {
           );
           animation: shimmer 1.5s infinite linear;
         }
+        
         @keyframes shimmer {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(100%);
-          }
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
         }
+        
         .custom-scrollbar::-webkit-scrollbar {
           width: 8px;
           height: 8px;
         }
+        
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(0, 0, 0, 0.05);
+          background: rgba(255, 255, 255, 0.1);
           border-radius: 10px;
         }
+        
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: var(--tiket-blue);
+          background: var(--primary);
           border-radius: 10px;
         }
+        
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #0052a8; /* Darker blue on hover */
+          background: var(--accent);
         }
       `}</style>
 
       {/* Header Section */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header className="sticky top-0 z-50 glass-morphism mx-4 mt-4 rounded-3xl">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center">
-              <Image
-                src="/tiketcom logo.png"
-                alt="Tiket.com Logo"
-                width={120} // Adjust width as needed
-                height={40} // Adjust height as needed
-                className="h-10 w-auto"
-              />
-              <span className="ml-3 text-2xl font-bold text-[var(--tiket-blue)]">
-                Quality First Automation Suite
+              <div className="relative">
+                <Image
+                  src="/tiketcom logo.png"
+                  alt="Tiket.com Logo"
+                  width={120}
+                  height={40}
+                  className="h-10 w-auto brightness-0 invert"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-400 opacity-80 mix-blend-multiply rounded"></div>
+              </div>
+              <span className="ml-4 text-xl font-black text-white tracking-tight">
+                QA<span className="text-cyan-400">SUITE</span>
               </span>
             </div>
-            <div className="flex items-center space-x-4">
+            <nav className="hidden lg:flex items-center space-x-2">
               <Link
                 href="/test-data"
-                className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-[var(--tiket-blue)] hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 shadow-md hover:shadow-lg"
+                className="px-4 py-2 text-sm font-bold text-white/80 hover:text-white transition-colors duration-200 hover:bg-white/10 rounded-xl"
               >
-                Create Test Data 🔄
+                TEST_DATA
               </Link>
               <Link
                 href="/api-test-cases"
-                className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200 shadow-md hover:shadow-lg"
+                className="px-4 py-2 text-sm font-bold text-white/80 hover:text-white transition-colors duration-200 hover:bg-white/10 rounded-xl"
               >
-                API Test Cases 🔍
+                API_CASES
               </Link>
               <Link
                 href="/chatbot"
-                className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-[var(--tiket-yellow)] hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition-colors duration-200 shadow-md hover:shadow-lg"
+                className="px-4 py-2 text-sm font-bold text-white/80 hover:text-white transition-colors duration-200 hover:bg-white/10 rounded-xl"
               >
-                Chat with AI Assistant ✨
+                AI_CHAT
               </Link>
               <Link
                 href="/test-runs"
-                className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors duration-200 shadow-md hover:shadow-lg"
+                className="px-4 py-2 text-sm font-bold text-white/80 hover:text-white transition-colors duration-200 hover:bg-white/10 rounded-xl"
               >
-                Test Case Documentor 📋
+                DOCUMENTOR
               </Link>
-            </div>
+            </nav>
           </div>
         </div>
       </header>
 
       {/* Main Content Area */}
-      <main className="min-h-[calc(100vh-10rem)] py-8 px-4 sm:px-6 lg:px-8 flex flex-col items-center">
-        <div className="w-full max-w-5xl space-y-10">
-          {/* Page Title and Subtitle */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-5xl md:text-6xl">
-              <span className="block">Automated</span>
-              <span className="block text-[var(--tiket-blue)]">
-                Failure Analysis
-              </span>
-            </h1>
-            <p className="mt-6 max-w-2xl mx-auto text-xl text-[var(--text-secondary)]">
-              Efficiently extract and analyze test report data. Upload your HTML
-              reports to get started.
-            </p>
-            <p className="mt-2 text-sm text-gray-400">
-              Developed by Accom SQA: M Fajrul Alam U N, Sunny Kumar, Amit Kumar
-              Dwivedi
-            </p>
+      <main className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 grid-pattern">
+        <div className="max-w-7xl mx-auto">
+          {/* Hero Section */}
+          <div className="text-center mb-20 relative">
+            <div className="absolute inset-0 flex items-center justify-center opacity-10">
+              <div className="text-[20rem] font-black text-white select-none">QA</div>
+            </div>
+            <div className="relative z-10">
+              <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8">
+                <span className="block text-white neon-text">AUTOMATED</span>
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600">
+                  FAILURE
+                </span>
+                <span className="block text-white">ANALYSIS</span>
+              </h1>
+              <div className="max-w-3xl mx-auto mb-8">
+                <p className="text-xl md:text-2xl text-white/80 font-mono leading-relaxed">
+                  {'>'} EXTRACT_DATA(reports.html)<br/>
+                  {'>'} ANALYZE_FAILURES()<br/>
+                  {'>'} OPTIMIZE_TESTING()
+                </p>
+              </div>
+              <div className="text-sm text-white/60 font-mono">
+                [DEVELOPED_BY: ACCOM_SQA_TEAM]
+              </div>
+            </div>
           </div>
 
           {!showPreview && (
             <div className="space-y-8">
-              {/* Quick Actions Card */}
-              <section className="glass-card bg-gradient-to-r from-blue-50 to-green-50">
-                <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4 text-center">
-                  🚀 Quick Actions
-                </h2>
-                <div className="flex flex-wrap justify-center gap-4">
-                  <Link
-                    href="/api-test-cases"
-                    className="flex items-center px-6 py-4 bg-green-600 hover:bg-green-700 text-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 group"
-                  >
-                    <svg
-                      className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    <div>
-                      <div className="font-semibold text-lg">
-                        API Auto Test Cases
+              {/* Action Grid */}
+              <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <Link href="/api-test-cases" className="group">
+                  <div className="brutal-card p-6 h-full">
+                    <div className="text-center">
+                      <div className="w-16 h-16 mx-auto mb-4 bg-green-500 border-4 border-black flex items-center justify-center">
+                        <span className="text-2xl font-black text-white">API</span>
                       </div>
-                      <div className="text-green-100 text-sm">
-                        Generate systematic API test cases from Excel
-                      </div>
+                      <h3 className="text-lg font-black mb-2 uppercase tracking-wide">
+                        API TEST CASES
+                      </h3>
+                      <p className="text-sm font-mono text-gray-600">
+                        GENERATE_SYSTEMATIC_API_TESTS()
+                      </p>
                     </div>
-                  </Link>
+                  </div>
+                </Link>
 
-                  <Link
-                    href="/test-data"
-                    className="flex items-center px-6 py-4 bg-[var(--tiket-blue)] hover:bg-blue-700 text-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 group"
-                  >
-                    <svg
-                      className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                      />
-                    </svg>
-                    <div>
-                      <div className="font-semibold text-lg">
-                        Create Test Data
+                <Link href="/test-data" className="group">
+                  <div className="brutal-card p-6 h-full">
+                    <div className="text-center">
+                      <div className="w-16 h-16 mx-auto mb-4 bg-blue-500 border-4 border-black flex items-center justify-center">
+                        <span className="text-2xl font-black text-white">DATA</span>
                       </div>
-                      <div className="text-blue-100 text-sm">
-                        Generate automated test data sequences
-                      </div>
+                      <h3 className="text-lg font-black mb-2 uppercase tracking-wide">
+                        TEST DATA
+                      </h3>
+                      <p className="text-sm font-mono text-gray-600">
+                        CREATE_AUTOMATED_SEQUENCES()
+                      </p>
                     </div>
-                  </Link>
+                  </div>
+                </Link>
 
-                  <Link
-                    href="/chatbot"
-                    className="flex items-center px-6 py-4 bg-[var(--tiket-yellow)] hover:bg-yellow-400 text-gray-900 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 group"
-                  >
-                    <svg
-                      className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                      />
-                    </svg>
-                    <div>
-                      <div className="font-semibold text-lg">AI Assistant</div>
-                      <div className="text-yellow-800 text-sm">
-                        Chat with intelligent SQA assistant
+                <Link href="/chatbot" className="group">
+                  <div className="brutal-card p-6 h-full">
+                    <div className="text-center">
+                      <div className="w-16 h-16 mx-auto mb-4 bg-yellow-500 border-4 border-black flex items-center justify-center">
+                        <span className="text-2xl font-black text-black">AI</span>
                       </div>
+                      <h3 className="text-lg font-black mb-2 uppercase tracking-wide">
+                        AI ASSISTANT
+                      </h3>
+                      <p className="text-sm font-mono text-gray-600">
+                        CHAT_WITH_INTELLIGENT_SQA()
+                      </p>
                     </div>
-                  </Link>
+                  </div>
+                </Link>
 
-                  <Link
-                    href="/test-runs"
-                    className="flex items-center px-6 py-4 bg-purple-600 hover:bg-purple-700 text-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 group"
-                  >
-                    <svg
-                      className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12h.01M12 12h.01M16 12h.01M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
-                      />
-                    </svg>
-                    <div>
-                      <div className="font-semibold text-lg">
-                        Test Case Documentor
+                <Link href="/test-runs" className="group">
+                  <div className="brutal-card p-6 h-full">
+                    <div className="text-center">
+                      <div className="w-16 h-16 mx-auto mb-4 bg-purple-500 border-4 border-black flex items-center justify-center">
+                        <span className="text-2xl font-black text-white">DOC</span>
                       </div>
-                      <div className="text-purple-100 text-sm">
-                        Document test cases with screenshots
-                      </div>
+                      <h3 className="text-lg font-black mb-2 uppercase tracking-wide">
+                        DOCUMENTOR
+                      </h3>
+                      <p className="text-sm font-mono text-gray-600">
+                        DOCUMENT_TEST_CASES()
+                      </p>
                     </div>
-                  </Link>
+                  </div>
+                </Link>
+              </section>
+
+              {/* Feature Showcase */}
+              <section className="glass-morphism p-8 mb-12">
+                <div className="text-center mb-8">
+                  <h2 className="text-3xl font-black text-white mb-4 uppercase tracking-wider">
+                    SYSTEM_FEATURES
+                  </h2>
+                  <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto"></div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div className="text-center floating">
+                    <div className="w-20 h-20 mx-auto mb-4 glass-morphism rounded-full flex items-center justify-center pulse-glow">
+                      <span className="text-2xl">⚡</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2">FAST_PROCESSING</h3>
+                    <p className="text-white/70 font-mono text-sm">
+                      Lightning-fast HTML report analysis with Web Workers
+                    </p>
+                  </div>
+                  <div className="text-center floating" style={{animationDelay: '0.5s'}}>
+                    <div className="w-20 h-20 mx-auto mb-4 glass-morphism rounded-full flex items-center justify-center pulse-glow">
+                      <span className="text-2xl">🔍</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2">SMART_ANALYSIS</h3>
+                    <p className="text-white/70 font-mono text-sm">
+                      Intelligent failure pattern detection and categorization
+                    </p>
+                  </div>
+                  <div className="text-center floating" style={{animationDelay: '1s'}}>
+                    <div className="w-20 h-20 mx-auto mb-4 glass-morphism rounded-full flex items-center justify-center pulse-glow">
+                      <span className="text-2xl">📊</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2">DATA_EXPORT</h3>
+                    <p className="text-white/70 font-mono text-sm">
+                      Export to CSV, Excel, or copy to clipboard instantly
+                    </p>
+                  </div>
                 </div>
               </section>
 
-              {/* Analysis Mode Selection Card */}
-              <section
-                aria-labelledby="analysis-mode-title"
-                className="glass-card"
-              >
-                <h2
-                  id="analysis-mode-title"
-                  className="text-2xl font-semibold text-[var(--text-primary)] mb-6 text-center"
-                >
-                  Select Analysis Mode
-                </h2>
-                <div className="flex justify-center space-x-3">
+              {/* Analysis Mode Selection */}
+              <section className="glass-morphism p-8">
+                <div className="text-center mb-8">
+                  <h2 className="text-3xl font-black text-white mb-4 uppercase tracking-wider">
+                    SELECT_ANALYSIS_MODE
+                  </h2>
+                  <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto"></div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {(["general", "regression", "api"] as const).map((mode) => (
                     <button
                       key={mode}
@@ -491,30 +599,35 @@ export default function Home() {
                           setSecondRunFile(null);
                         }
                       }}
-                      className={`px-8 py-3.5 text-base font-medium rounded-xl border-2 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 shadow-sm hover:shadow-md 
-                        ${
-                          analysisMode === mode
-                            ? "bg-[var(--tiket-blue)] text-white border-[var(--tiket-blue)] ring-[var(--tiket-blue)]"
-                            : "bg-white text-[var(--tiket-blue)] border-gray-300 hover:bg-gray-50 hover:border-[var(--tiket-blue)] ring-[var(--tiket-blue)]"
-                        }`}
+                      className={`brutal-btn w-full ${
+                        analysisMode === mode
+                          ? "bg-cyan-400 text-black"
+                          : mode === "regression"
+                          ? "secondary"
+                          : mode === "api"
+                          ? "accent"
+                          : ""
+                      }`}
                     >
                       {mode === "general"
-                        ? "Web Failure Analysis"
+                        ? "WEB_ANALYSIS"
                         : mode === "regression"
-                        ? "App Regression Analysis"
-                        : "API Failure Analysis"}
+                        ? "REGRESSION_TEST"
+                        : "API_ANALYSIS"}
                     </button>
                   ))}
                 </div>
-                <p className="text-center text-md text-[var(--text-secondary)] mt-6">
-                  {analysisMode === "general"
-                    ? "Upload a single HTML report for detailed test case extraction."
-                    : analysisMode === "regression"
-                    ? firstRunProcessed
-                      ? "Upload the 2nd run HTML report to compare with the 1st run."
-                      : "Upload the 1st run HTML report, then the 2nd run for comparison."
-                    : "Upload an API HTML report for detailed API test case extraction."}
-                </p>
+                <div className="mt-8 p-4 bg-black/20 rounded-lg border border-white/10">
+                  <p className="text-white/80 font-mono text-sm text-center">
+                    {analysisMode === "general"
+                      ? `${'>'}UPLOAD_SINGLE_HTML_REPORT()`
+                      : analysisMode === "regression"
+                      ? firstRunProcessed
+                        ? `${'>'}UPLOAD_SECOND_RUN_REPORT()`
+                        : `${'>'}UPLOAD_FIRST_RUN_REPORT()`
+                      : `${'>'}UPLOAD_API_HTML_REPORT()`}
+                  </p>
+                </div>
               </section>
 
               {/* Test Case Ordering for Regression Analysis Card */}
@@ -893,10 +1006,10 @@ export default function Home() {
       </main>
 
       {/* Footer Section */}
-      <footer className="bg-white/50 border-t border-gray-200/80 mt-auto">
-        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-sm text-[var(--text-secondary)]">
-            &copy; {new Date().getFullYear()} Developed by QA Accommodation Team
+      <footer className="glass-morphism mx-4 mb-4 rounded-3xl">
+        <div className="max-w-7xl mx-auto py-6 px-6 lg:px-8 text-center">
+          <p className="text-sm font-mono text-white/60">
+            &copy; {new Date().getFullYear()} DEVELOPED_BY_QA_ACCOMMODATION_TEAM
           </p>
         </div>
       </footer>
