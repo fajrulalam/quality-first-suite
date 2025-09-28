@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true
   },
-  // Remove server-side features for static export
+  // Configure for Vercel deployment
   basePath: process.env.NODE_ENV === 'production' ? '/automate-failure-analysis' : ''
 };
 

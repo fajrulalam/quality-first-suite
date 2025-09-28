@@ -17,7 +17,8 @@
       "Bash(chmod:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "WebFetch(domain:fajrulalam.github.io)"
+      "WebFetch(domain:fajrulalam.github.io)",
+      "Bash(NODE_ENV=development npm run build)"
     ]
   },
   "enableAllProjectMcpServers": false
